@@ -111,7 +111,7 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
 .nav .in{max-width:448px;margin:0 auto;display:flex;gap:10px;align-items:center}
 .bar4{flex:1;height:66px;border-radius:99px;display:flex;align-items:center;justify-content:space-around;padding:0 8px;pointer-events:auto;
   background:rgba(18,24,19,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);box-shadow:0 14px 40px rgba(0,0,0,.5)}
-.t{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;color:var(--faint);transition:.2s}
+.t{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:var(--faint);transition:.2s}
 .t svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .t.on{color:var(--gink);background:var(--g1);box-shadow:0 0 20px rgba(157,251,139,.45)}
 .plus{width:66px;height:66px;border-radius:50%;flex:none;display:grid;place-items:center;pointer-events:auto;color:var(--gink);
@@ -147,6 +147,22 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
 .txh .a{font-size:36px;font-weight:800;letter-spacing:-.03em;margin-top:6px}.txh span{display:block;font-size:13px;color:var(--soft);margin-top:2px}
 .danger{width:100%;height:52px;border-radius:99px;font-weight:700;color:var(--red);background:rgba(255,111,111,.1);margin-top:14px}
 .danger.armed{background:var(--red);color:#2a0606}
+.wsum{margin:-8px 2px 16px;color:var(--soft);font-size:14px}.wsum b{color:var(--ink);font-size:16px}
+.wcard{position:relative;border-radius:28px;padding:18px 18px 16px;margin-bottom:12px;overflow:hidden}
+.wcard:after{content:"";position:absolute;right:-50px;top:-70px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);pointer-events:none}
+.wcard.cr{background:radial-gradient(120% 140% at 100% 0%,rgba(122,215,255,.32),transparent 55%),linear-gradient(150deg,#0f2a33,#0a1418);border:1px solid rgba(122,215,255,.18)}
+.wcard.by{color:var(--gink);background:radial-gradient(120% 120% at 0% 0%,#c6ffb8,var(--g1) 35%,var(--g2));box-shadow:0 20px 50px -24px rgba(95,211,111,.6)}
+.wcard.ru{background:radial-gradient(120% 140% at 100% 0%,rgba(200,155,255,.3),transparent 55%),linear-gradient(150deg,#1d1730,#0e0b16);border:1px solid rgba(200,155,255,.18)}
+.wcard .wt{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;opacity:.85}
+.wcard .wt span:last-child{font-size:22px}
+.wcard .wb{font-size:38px;font-weight:800;letter-spacing:-.04em;margin:10px 0 2px;line-height:1.05}
+.wcard .wb small{font-size:16px;font-weight:700;opacity:.6;margin-left:6px;letter-spacing:0}
+.wcard .ws{font-size:13px;opacity:.72;min-height:18px}
+.wcard .wa{display:flex;gap:8px;margin-top:14px;position:relative;z-index:1}
+.wcard .wa button{flex:1;height:42px;border-radius:99px;font-size:13px;font-weight:700;background:rgba(255,255,255,.1)}
+.wcard .wa button.main{background:var(--ink);color:#0b0f0c}
+.wcard.by .wa button{background:rgba(6,33,9,.12);color:var(--gink)}
+.wcard.by .wa button.main{background:#0b120c;color:var(--ink)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -179,6 +195,13 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
     <h2>Траты <button data-go="hist">Все</button></h2>
     <div class="chips" id="homeChips"></div>
     <div class="glass list" id="recent"></div>
+  </main>
+
+  <main class="view" id="v-wallet">
+    <h1>Кошелёк</h1>
+    <p class="wsum" id="wTotal"></p>
+    <div id="wCards"></div>
+    <p class="fc">Доход пиши в бота как <b>+1000 зп</b>, <b>+50 gram</b> или <b>+20000 rub</b>. Если сумма разошлась с реальной, нажми «Поправить» и введи, сколько лежит сейчас.</p>
   </main>
 
   <main class="view" id="v-hist">
@@ -226,6 +249,7 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
 <nav class="nav"><div class="in">
   <div class="bar4">
     <button class="t on" data-go="home" aria-label="Главная"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></button>
+    <button class="t" data-go="wallet" aria-label="Кошелёк"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h12v4"/><path d="M3 7v11a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2z"/><circle cx="16" cy="14.5" r="1.2"/></svg></button>
     <button class="t" data-go="hist" aria-label="История"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></svg></button>
     <button class="t" data-go="stats" aria-label="Статистика"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg></button>
     <button class="t" data-go="set" aria-label="Настройки"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
@@ -251,6 +275,16 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
   <div class="row" id="cats"></div>
   <div class="pad" id="pad"></div>
   <button class="primary" id="save" disabled>Введи сумму</button>
+</div>
+
+<div class="sheet" id="sBal">
+  <div class="grab"></div>
+  <div class="glass amtcard">
+    <div class="lbl" id="balLbl">ТЕКУЩИЙ БАЛАНС</div>
+    <div class="limin" style="justify-content:center"><input id="balIn" class="n" inputmode="decimal" style="text-align:center;width:70%"><span id="balCur"></span></div>
+    <div class="eq">Введи, сколько сейчас реально лежит. Дальше доходы и траты будут считаться от этой суммы.</div>
+  </div>
+  <button class="primary" id="balSave" style="margin-top:14px">Сохранить баланс</button>
 </div>
 
 <div class="sheet" id="sTx">
@@ -286,7 +320,7 @@ function demo(){
   rec.filter(r => r[2]==='exp').forEach(r => { const d = new Date(r[1]*1000).getDate(); day[d]=(day[d]||0)+r[7]; cat[r[4]]=(cat[r[4]]||0)+r[7] });
   const seed = [14,31,6,22,0,17,26,9,40,12,19,7,28,15,5,33,11,24,8,20];
   for(let d=1; d<=t-9; d++){ const v = seed[d % seed.length]; if(v){ day[d]=(day[d]||0)+v; cat['🛒 Продукты']=(cat['🛒 Продукты']||0)+v*.6; cat['🍔 Кафе и доставка']=(cat['🍔 Кафе и доставка']||0)+v*.4 } }
-  return {m:y+'-'+String(mo+1).padStart(2,'0'), lim:800, sp:Object.values(day).reduce((a,b)=>a+b,0), in:1150, prev:760, cat, day, rec, gram:'1.42', usd:'3.21',
+  return {m:y+'-'+String(mo+1).padStart(2,'0'), lim:800, sp:Object.values(day).reduce((a,b)=>a+b,0), in:1150, prev:760, cat, day, rec, gram:'1.42', usd:'3.21', rub:'0.0352', w:{BYN:684.2, RUB:12500, GRAM:86.4, USDT:20}, last:{BYN:at(t-7,14), GRAM:at(t-4,15)},
     ec:["🛒 Продукты","🍔 Кафе и доставка","🚕 Транспорт","🤖 Подписки","📱 Связь","🎮 Игры","👕 Одежда","💊 Здоровье","🎉 Развлечения","📚 Учёба","🏠 Жильё","🎁 Подарки","🪙 Крипта и комиссии","📦 Другое"],
     ic:["💼 Зарплата","📢 Реклама и каналы","🪙 Крипта","🎁 Подарок","💰 Другой доход"]};
 }
@@ -406,10 +440,31 @@ function renderSet(){
 }
 $('limSave').onclick = () => { const v = parseFloat($('limIn').value.replace(',','.')); if(v > 0) send({t:'limit', v}, 'Лимит ' + fmt(v,0) + ' BYN сохранён') };
 
+const WALLETS = [{k:'cr', c:'GRAM', t:'Крипта', e:'💎', sym:'GRAM'}, {k:'by', c:'BYN', t:'Белорусские рубли', e:'🇧🇾', sym:'Br'}, {k:'ru', c:'RUB', t:'Российские рубли', e:'🇷🇺', sym:'₽'}];
+const inByn = (v, c) => c==='BYN' ? v : c==='RUB' ? (D.rub ? v * D.rub : null) : c==='GRAM' ? (rate() ? v * rate() : null) : (c==='USDT' || c==='USD') && D.usd ? v * D.usd : null;
+function renderWallet(){
+  const w = D.w || {}, last = D.last || {}; let total = 0, all = true;
+  Object.keys(w).forEach(c => { const b = inByn(w[c], c); if(b == null) all = false; else total += b });
+  $('wTotal').innerHTML = 'Всего ≈ <b class="n">' + fmt(total) + ' BYN</b>' + (all ? '' : ' · не все курсы загружены');
+  $('wCards').innerHTML = WALLETS.map(x => {
+    const v = w[x.c] || 0, b = inByn(v, x.c); let sub = x.c !== 'BYN' && b != null ? '≈ ' + fmt(b) + ' BYN' : '';
+    if(x.c === 'GRAM' && w.USDT) sub += (sub ? ' · ' : '') + '+ ' + fmt(w.USDT) + ' USDT';
+    const li = last[x.c] ? 'Последнее поступление: ' + new Date(last[x.c]*1000).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}) : 'Поступлений пока не было';
+    return '<div class="wcard ' + x.k + '"><div class="wt"><span>' + x.t + '</span><span>' + x.e + '</span></div><div class="wb n">' + (v < 0 ? '−' : '') + money(v) + '<small>' + x.sym + '</small></div>'
+      + '<div class="ws">' + (sub ? sub + '<br>' : '') + li + '</div><div class="wa"><button class="main" data-inc="' + x.c + '">+ Доход</button><button data-bal="' + x.c + '">Поправить</button></div></div>' }).join('');
+  $('wCards').querySelectorAll('[data-inc]').forEach(b => b.onclick = () => openAdd('inc', b.dataset.inc));
+  $('wCards').querySelectorAll('[data-bal]').forEach(b => b.onclick = () => openBal(b.dataset.bal));
+}
+let balCur = 'BYN';
+function openBal(c){ balCur = c; const x = WALLETS.find(w => w.c === c); $('balLbl').textContent = 'СЕЙЧАС ЛЕЖИТ · ' + x.t.toUpperCase(); $('balCur').textContent = x.sym;
+  $('balIn').value = (D.w && D.w[c]) || 0; openSheet('sBal'); setTimeout(() => $('balIn').select(), 350) }
+$('balSave').onclick = () => { const v = parseFloat($('balIn').value.replace(',','.').replace(/\s/g,'')); if(!isNaN(v)) send({t:'bal', c:balCur, v}, 'Баланс обновлён') };
+window.RENDER = {home:renderHome, hist:renderHist, stats:renderStats, set:renderSet, wallet:renderWallet};
+
 function go(v){
   document.querySelectorAll('.view').forEach(x => x.classList.toggle('on', x.id === 'v-'+v));
   document.querySelectorAll('.nav .t').forEach(x => x.classList.toggle('on', x.dataset.go === v));
-  ({home:renderHome, hist:renderHist, stats:renderStats, set:renderSet})[v](); window.scrollTo({top:0}); tick();
+  window.RENDER[v](); window.scrollTo({top:0}); tick();
 }
 document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
 
@@ -423,7 +478,7 @@ function send(obj, doneText){
   closeSheet(); alert(inTg ? 'Бот сейчас недоступен, попробуй позже.' : (doneText || 'Готово') + '\n\nЭто демо: в настоящем мини-аппе запись уйдёт в бота.');
 }
 
-const CURS = ['BYN','GRAM','USDT','USD'], QUICK = {BYN:[5,10,20,50,100], GRAM:[1,3,5,10], USDT:[5,10,20,50], USD:[5,10,20,50]};
+const CURS = ['BYN','GRAM','RUB','USDT','USD'], QUICK = {BYN:[5,10,20,50,100], GRAM:[1,3,5,10], RUB:[300,500,1000,5000], USDT:[5,10,20,50], USD:[5,10,20,50]};
 let st = {kind:'exp', amt:'', cur:'BYN', cat:null};
 function suggestions(){ const m = {}; D.rec.filter(r => r[2]===st.kind).forEach(r => { const k = r[3].toLowerCase(); (m[k] = m[k] || {n:0, r}).n++ });
   return Object.values(m).sort((a,b) => b.n - a.n).slice(0,8).map(x => x.r) }
@@ -431,9 +486,9 @@ function drawAdd(){
   $('kind').querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.k === st.kind); b.classList.toggle('out', b.dataset.k === 'exp') });
   $('amtLbl').textContent = st.kind === 'inc' ? 'НОВЫЙ ДОХОД' : 'НОВАЯ ТРАТА';
   $('amt').textContent = (st.amt || '0').replace('.', ',') + ' ' + st.cur; $('amt').classList.toggle('zero', !st.amt);
-  const n = parseFloat(st.amt), r = st.cur==='BYN' ? 1 : st.cur==='GRAM' ? rate() : D.usd ? +D.usd : null;
+  const n = parseFloat(st.amt), r = st.cur==='BYN' ? 1 : st.cur==='GRAM' ? rate() : st.cur==='RUB' ? (D.rub ? +D.rub : null) : D.usd ? +D.usd : null;
   $('eq').textContent = st.cur === 'BYN' ? '' : n > 0 && r ? '≈ ' + fmt(n*r) + ' BYN' : 'бот пересчитает в BYN по курсу';
-  $('curs').innerHTML = CURS.map(c => chip(c, c === 'GRAM' ? '💎 GRAM' : c, st.cur)).join('');
+  $('curs').innerHTML = CURS.map(c => chip(c, c === 'GRAM' ? '💎 GRAM' : c === 'RUB' ? '₽ RUB' : c, st.cur)).join('');
   $('curs').querySelectorAll('.chip').forEach(b => b.onclick = () => { st.cur = b.dataset.f; tick(); drawAdd() });
   $('quick').innerHTML = QUICK[st.cur].map(q => '<button class="chip" data-q="' + q + '">' + q + ' ' + st.cur + '</button>').join('');
   $('quick').querySelectorAll('.chip').forEach(b => b.onclick = () => { st.amt = b.dataset.q; tick(); drawAdd() });
@@ -452,8 +507,8 @@ $('pad').querySelectorAll('button').forEach(b => b.onclick = () => { const k = b
   st.amt = a; tick(); drawAdd() });
 $('kind').querySelectorAll('button').forEach(b => b.onclick = () => { st.kind = b.dataset.k; st.cat = null; tick(); drawAdd() });
 $('desc').onkeydown = e => { if(e.key === 'Enter') e.target.blur() };
-function openAdd(){ st = {kind:'exp', amt:'', cur:'BYN', cat:null}; $('desc').value = ''; drawAdd(); openSheet('sAdd') }
-$('plus').onclick = openAdd;
+function openAdd(k, c){ st = {kind:k||'exp', amt:'', cur:c||'BYN', cat:null}; $('desc').value = ''; drawAdd(); openSheet('sAdd') }
+$('plus').onclick = () => openAdd();
 $('save').onclick = () => { const a = parseFloat(st.amt); if(a > 0) send({t:'add', a, c:st.cur, d:$('desc').value.trim(), cat:st.cat, inc: st.kind==='inc'}, (st.kind==='inc'?'Доход':'Трата') + ' сохранена: ' + fmt(a,4) + ' ' + st.cur) };
 document.addEventListener('keydown', e => { if(opened !== $('sAdd') || document.activeElement === $('desc')) return;
   if(/^[0-9]$/.test(e.key)) $('pad').querySelector('[data-k="' + e.key + '"]').click();
