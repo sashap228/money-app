@@ -79,7 +79,16 @@
       '<text x="12" y="15.4" text-anchor="middle" class="tx" style="font-size:9px">₸</text></g>'],
     'PLN': ['#fecaca', '#b91c1c',
       '<g class="coin"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="6.2" opacity=".45"/>' +
-      '<text x="12" y="15.4" text-anchor="middle" class="tx">zł</text></g>']
+      '<text x="12" y="15.4" text-anchor="middle" class="tx">zł</text></g>'],
+    'USDT': ['#a7f3d0', '#047857',
+      '<g class="coin"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="6.2" opacity=".45"/>' +
+      '<text x="12" y="15.4" text-anchor="middle" class="tx" style="font-size:9px">₮</text></g>'],
+    'BTC': ['#fed7aa', '#c2410c',
+      '<g class="coin"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="6.2" opacity=".45"/>' +
+      '<text x="12" y="15.4" text-anchor="middle" class="tx" style="font-size:9px">₿</text></g>'],
+    'ETH': ['#c7d2fe', '#4338ca',
+      '<g class="coin"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="6.2" opacity=".45"/>' +
+      '<text x="12" y="15.4" text-anchor="middle" class="tx" style="font-size:9px">Ξ</text></g>']
   };
 
   var css =
