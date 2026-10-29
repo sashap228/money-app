@@ -228,6 +228,48 @@ html[data-theme=ocean] .wcard.ru{background:radial-gradient(120% 140% at 100% 0%
 html[data-theme=ocean] .wcard.by{--ink:#0b2547;--soft:#2d4d78;background:radial-gradient(120% 120% at 0% 0%,#e6f3ff,#a9d1ff 40%,#6ea7ec);box-shadow:0 20px 50px -24px rgba(40,90,170,.75)}
 html[data-theme=ocean] .wcard.by .wa button{background:rgba(11,37,71,.1);color:#0b2547}html[data-theme=ocean] .wcard.by .wa button.main{background:#0b2547;color:#fff}
 html[data-theme=ocean] .thm button.on{box-shadow:0 0 0 4px rgba(143,196,255,.16)}
+/* ---------- регистрация ---------- */
+.ob{position:fixed;inset:0;z-index:40;overflow-y:auto;background:radial-gradient(90% 45% at 50% -8%,rgba(95,211,111,.3),transparent 70%),radial-gradient(60% 30% at 100% 70%,rgba(95,211,111,.1),transparent 70%),var(--bg)}
+html[data-theme=ocean] .ob{background:radial-gradient(70% 32% at 88% -2%,rgba(255,255,255,.9),transparent 70%),radial-gradient(130% 42% at 50% 115%,#173a72 0%,rgba(23,58,114,.5) 45%,transparent 75%),linear-gradient(180deg,#eaf3fc 0%,#d0e2f6 45%,#a8c5ea 100%)}
+.ob[hidden]{display:none}
+.obin{max-width:480px;min-height:100%;margin:0 auto;display:flex;flex-direction:column;padding:calc(18px + env(safe-area-inset-top)) 20px calc(22px + env(safe-area-inset-bottom))}
+.obtop{display:flex;align-items:center;gap:12px;height:40px}
+.obdots{flex:1;display:flex;gap:6px}.obdots i{flex:1;height:5px;border-radius:9px;background:var(--line);overflow:hidden;position:relative}
+.obdots i:after{content:"";position:absolute;inset:0;background:var(--g1);transform:scaleX(0);transform-origin:0 50%;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.obdots i.on:after{transform:none}
+.obback{font-size:14px;font-weight:600;color:var(--soft);padding:8px 2px;min-width:52px;text-align:left}.obback[disabled]{visibility:hidden}
+.obbody{flex:1;padding-top:26px}
+.obstep{animation:obIn .45s cubic-bezier(.2,.8,.2,1) both}.obstep.back{animation-name:obBack}
+@keyframes obIn{from{opacity:0;transform:translateX(26px)}}@keyframes obBack{from{opacity:0;transform:translateX(-26px)}}
+.obstep>*{animation:m-up .5s cubic-bezier(.2,.8,.2,1) both}.obstep>*:nth-child(2){animation-delay:.05s}.obstep>*:nth-child(3){animation-delay:.1s}.obstep>*:nth-child(4){animation-delay:.15s}.obstep>*:nth-child(5){animation-delay:.2s}
+@keyframes m-up{from{opacity:0;transform:translateY(10px)}}
+.obhero{width:76px;height:76px;border-radius:26px;display:grid;place-items:center;font-size:40px;margin-bottom:22px;background:linear-gradient(145deg,var(--g1),var(--g2));box-shadow:0 18px 40px -14px var(--g2),inset 0 1px 0 rgba(255,255,255,.5)}
+.obhero span{display:inline-block;animation:wave 2.4s ease-in-out .6s infinite;transform-origin:70% 70%}
+@keyframes wave{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(16deg)}20%,40%{transform:rotate(-8deg)}}
+.obstep h2{display:block;font-size:30px;font-weight:800;letter-spacing:-.035em;line-height:1.1;margin:0 0 10px}
+.obstep>p{color:var(--soft);font-size:15px;margin-bottom:22px;max-width:360px}
+.obname{width:100%;height:64px;border-radius:22px;padding:0 20px;font-size:22px;font-weight:700;outline:none}
+.obname::placeholder{color:var(--faint)}
+.obgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.obgrid button{position:relative;height:86px;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-weight:700;font-size:14px;color:var(--soft);background:var(--glass);border:1.5px solid var(--line);transition:border-color .2s,box-shadow .2s,color .2s,transform .18s}
+html[data-theme=ocean] .obgrid button{--ink:#f2f7ff;--soft:#a9bfdf;--line:rgba(255,255,255,.11)}
+.obgrid button small{font-size:11px;font-weight:500;color:var(--faint);margin-top:-4px}
+.obgrid button .ai{width:32px;height:32px;border-radius:11px;font-size:18px}
+.obgrid button.on{border-color:var(--g1);color:var(--ink);box-shadow:0 0 0 4px rgba(157,251,139,.14)}
+html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.25)}
+.obgrid button.on:after{content:"✓";position:absolute;top:7px;right:9px;width:18px;height:18px;border-radius:50%;background:var(--g1);color:var(--gink);font-size:11px;font-weight:800;display:grid;place-items:center}
+.obgrid button:active{transform:scale(.95)}
+.oblbl{font-size:12px;font-weight:700;color:var(--soft);letter-spacing:.04em;text-transform:uppercase;margin:18px 2px 10px}.oblbl:first-of-type{margin-top:0}
+.oblim{display:flex;align-items:baseline;gap:10px;padding:18px 20px;border-radius:24px;margin-bottom:12px}
+.oblim input{flex:1;min-width:0;font-size:46px;font-weight:800;letter-spacing:-.04em;outline:none}.oblim span{font-weight:700;color:var(--soft);font-size:18px}
+.obnote{font-size:13px;color:var(--soft);margin-top:14px}
+.obfoot{padding-top:18px}
+.prof{display:flex;align-items:center;gap:14px;margin-top:2px}
+.prof .pa{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:22px;font-weight:800;color:var(--gink);background:linear-gradient(140deg,var(--g1),var(--g2));flex:none}
+.prof b{display:block;font-size:18px}.prof span{font-size:13px;color:var(--soft)}
+.prof button{margin-left:auto;height:38px;padding:0 14px;border-radius:99px;font-size:13px;font-weight:700;color:var(--g1);background:rgba(255,255,255,.06)}
+.pcurs{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}.pcurs>span{display:flex;align-items:center;gap:6px;height:32px;padding:0 11px 0 5px;border-radius:99px;font-size:13px;font-weight:700;background:rgba(255,255,255,.06)}
+.pcurs .ai{width:22px;height:22px;border-radius:50%;font-size:13px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <script src="icons.js"></script>
@@ -294,6 +336,7 @@ html[data-theme=ocean] .thm button.on{box-shadow:0 0 0 4px rgba(143,196,255,.16)
 
   <main class="view" id="v-set">
     <h1>Настройки</h1>
+    <div class="glass card" id="profCard"></div>
     <div class="glass card">
       <h3>Оформление</h3>
       <p>Тема запомнится на всех твоих устройствах</p>
@@ -327,6 +370,12 @@ html[data-theme=ocean] .thm button.on{box-shadow:0 0 0 4px rgba(143,196,255,.16)
     <div class="glass card" id="ratesCard"></div>
   </main>
 </div>
+
+<div class="ob" id="ob" hidden><div class="obin">
+  <div class="obtop"><button class="obback" id="obBack">‹ Назад</button><div class="obdots" id="obDots"><i></i><i></i><i></i><i></i></div></div>
+  <div class="obbody" id="obBody"></div>
+  <div class="obfoot"><button class="primary" id="obNext">Дальше</button></div>
+</div></div>
 
 <nav class="nav"><div class="in">
   <div class="bar4">
@@ -465,7 +514,7 @@ let homeCat = 'all';
 const chip = (f, label, cur) => '<button class="chip ' + (cur === f ? 'on' : '') + '" data-f="' + esc(f) + '">' + label + '</button>';
 
 function renderHome(){
-  const u = inTg && tg.initDataUnsafe && tg.initDataUnsafe.user, name = (u && u.first_name) || '';
+  const u = inTg && tg.initDataUnsafe && tg.initDataUnsafe.user, name = D.name || (u && u.first_name) || '';
   const h = NOW.getHours();
   $('greet').textContent = (h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер') + ' 👋';
   $('hi').textContent = name || 'Твои деньги';
@@ -555,6 +604,10 @@ function renderStats(){
 }
 
 function renderSet(){
+  const pn = D.name || 'Без имени', pc = [B(), ...((D.onb && D.curs) || [])];
+  $('profCard').innerHTML = '<div class="prof"><div class="pa">' + esc(pn[0].toUpperCase()) + '</div><div><b>' + esc(pn) + '</b><span>основная валюта ' + B() + '</span></div><button id="profEdit">Изменить</button></div>'
+    + '<div class="pcurs">' + pc.map(c => '<span>' + emo(c) + c + '</span>').join('') + '</div>';
+  $('profEdit').onclick = () => OB.open(true);
   $('limIn').value = D.lim; const ps = LIMP[B()]; $('limCur').textContent = B(); $('howBase').textContent = 'трата в ' + B();
   $('baseCurs').innerHTML = Object.keys(FIATS).map(c => '<button class="' + (c === B() ? 'on' : '') + '" data-c="' + c + '">' + emo(c) + c + '</button>').join('');
   $('baseCurs').querySelectorAll('button').forEach(b => b.onclick = () => { if(b.dataset.c !== B()) send({t:'base', c:b.dataset.c}, 'Основная валюта: ' + b.dataset.c) });
@@ -567,17 +620,20 @@ function renderSet(){
 }
 $('limSave').onclick = () => { const v = parseFloat($('limIn').value.replace(',','.')); if(v > 0) send({t:'limit', v}, 'Лимит ' + fmt(v,0) + ' ' + B() + ' сохранён') };
 
-function WALLETS(){ const w = D.w || {}, b = B(), card = (c, k) => ({k, c, t:FIATS[c][1], e:c, sym:FIATS[c][2]});
+const CINFO = {GRAM:['Крипта · GRAM','GRAM'], USDT:['Tether','USDT'], BTC:['Bitcoin','BTC'], ETH:['Ethereum','ETH']};
+function WALLETS(){ const w = D.w || {}, b = B(), card = (c, k) => FIATS[c] ? {k, c, t:FIATS[c][1], e:c, sym:FIATS[c][2]} : {k:'cr', c, t:CINFO[c][0], e:c, sym:CINFO[c][1]};
+  if(D.onb && Array.isArray(D.curs)){ const list = [...new Set([b, ...D.curs, ...Object.keys(w).filter(c => (FIATS[c] || CINFO[c]) && Math.abs(w[c]) > .004)])];
+    return list.map((c, i) => card(c, i === 0 ? 'by' : FIATS[c] ? 'ru' : 'cr')) }
   const extra = Object.keys(FIATS).filter(c => c !== b && ((['BYN','RUB'].includes(c) && ['BYN','RUB'].includes(b)) || Math.abs(w[c] || 0) > .004));
   return [{k:'cr', c:'GRAM', t:'Крипта', e:'GRAM', sym:'GRAM'}, card(b, 'by'), ...extra.map(c => card(c, 'ru'))] }
-const inByn = (v, c) => { if(c === 'GRAM') return rate() ? v * rate() : null; if(c === 'USDT') return D.usd ? v * D.usd : null; const k = fxByn(c); return k ? v * k : null };
+const inByn = (v, c) => { if(c === 'GRAM') return rate() ? v * rate() : null; if(CINFO[c] && c !== 'GRAM') return D.usd && (c === 'USDT' || (D.cr && D.cr[c])) ? v * (c === 'USDT' ? (D.cr && D.cr.USDT) || 1 : D.cr[c]) * D.usd : null; const k = fxByn(c); return k ? v * k : null };
 function renderWallet(){
   const w = D.w || {}, last = D.last || {}; let total = 0, all = true;
   Object.keys(w).forEach(c => { const b = toB(w[c], c); if(b == null) all = false; else total += b });
   $('wTotal').innerHTML = 'Всего ≈ <b class="n">' + fmt(total) + ' ' + B() + '</b>' + (all ? '' : ' · не все курсы загружены');
   $('wCards').innerHTML = WALLETS().map(x => {
     const v = w[x.c] || 0, b = toB(v, x.c); let sub = x.c !== B() && b != null ? '≈ ' + fmt(b) + ' ' + B() : '';
-    if(x.c === 'GRAM' && w.USDT) sub += (sub ? ' · ' : '') + '+ ' + fmt(w.USDT) + ' USDT';
+    if(x.c === 'GRAM' && w.USDT && !(D.onb && (D.curs || []).includes('USDT'))) sub += (sub ? ' · ' : '') + '+ ' + fmt(w.USDT) + ' USDT';
     const li = last[x.c] ? 'Последнее поступление: ' + new Date(last[x.c]*1000).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}) : 'Поступлений пока не было';
     return '<div class="wcard ' + x.k + '"><div class="wt"><span>' + x.t + '</span><span class="wi">' + emo(x.e) + '</span></div><div class="wb n">' + (v < 0 ? '−' : '') + money(v) + '<small>' + x.sym + '</small></div>'
       + '<div class="ws">' + (sub ? sub + '<br>' : '') + li + '</div><div class="wa"><button class="main" data-inc="' + x.c + '">+ Доход</button><button data-bal="' + x.c + '">Поправить</button></div></div>' }).join('');
@@ -610,7 +666,7 @@ function drawDebt(){
   $('dKind').querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.k === dk); b.classList.toggle('out', b.dataset.k === 'lend') });
   $('dPeople').innerHTML = (D.debts || []).slice(0, 10).map(p => chip(p.n, avatar(p).replace('class="av"', 'class="av" style="width:22px;height:22px;font-size:11px;--h:' + hue(p.k) + '"') + ' ' + esc(p.n), $('dName').value.trim())).join('');
   $('dPeople').querySelectorAll('.chip').forEach(b => b.onclick = () => { $('dName').value = b.dataset.f; tick(); drawDebt() });
-  $('dCurs').innerHTML = [...new Set([B(),'GRAM','USDT','BYN','RUB','USD'])].map(c => chip(c, c, dcur)).join('');
+  $('dCurs').innerHTML = CURS().map(c => chip(c, c, dcur)).join('');
   $('dCurs').querySelectorAll('.chip').forEach(b => b.onclick = () => { dcur = b.dataset.f; tick(); drawDebt() });
   const ok = $('dName').value.trim() && parseFloat($('dAmt').value.replace(',','.')) > 0;
   $('dSave').disabled = !ok; $('dSave').textContent = dk === 'lend' ? 'Записать: я дал в долг' : 'Записать: я взял в долг';
@@ -633,6 +689,58 @@ function openPerson(k){
   $('pHist').querySelectorAll('.dx').forEach(b => b.onclick = () => { if(confirm('Удалить эту запись?')) send({t:'debtdel', id:+b.dataset.id}, 'Запись удалена') });
   openSheet('sPerson');
 }
+// ---------- регистрация ----------
+const OB = (() => {
+  let step = 0, f = {}, edit = false;
+  const ALL = ['BYN','RUB','USD','EUR','UAH','KZT','PLN','GRAM','USDT','BTC','ETH'];
+  const NAMES = {BYN:'бел. рубль', RUB:'рос. рубль', USD:'доллар', EUR:'евро', UAH:'гривна', KZT:'тенге', PLN:'злотый', GRAM:'крипта', USDT:'стейбл', BTC:'биткоин', ETH:'эфир'};
+  const tile = (c, on) => '<button class="' + (on ? 'on' : '') + '" data-c="' + c + '">' + emo(c) + c + '<small>' + NAMES[c] + '</small></button>';
+  function draw(dir){
+    $('obDots').querySelectorAll('i').forEach((d, i) => d.classList.toggle('on', i <= step));
+    $('obBack').disabled = step === 0;
+    try{ if(step > 0 || edit) tg.BackButton.show(); else tg.BackButton.hide() }catch(e){}
+    let h = '';
+    if(step === 0) h = '<div class="obhero"><span>👋</span></div><h2>' + (edit ? 'Твой профиль' : 'Привет! Давай познакомимся') + '</h2><p>Пара вопросов, и бот подстроится под тебя. Займёт 20 секунд.</p>'
+      + '<p class="oblbl">Как тебя зовут?</p><input class="obname glass" id="obName" maxlength="30" autocomplete="given-name" placeholder="Имя" value="' + esc(f.name) + '">';
+    if(step === 1) h = '<h2>Основная валюта</h2><p>В ней будут лимит, отчёты и графики. Траты без валюты тоже пойдут в ней.</p><div class="obgrid" id="obG">' + Object.keys(FIATS).map(c => tile(c, f.base === c)).join('') + '</div>';
+    if(step === 2) h = '<h2>Чем ещё пользуешься?</h2><p>Эти валюты появятся в кошельке и при добавлении трат. Можно ничего не выбирать.</p>'
+      + '<p class="oblbl">Валюты</p><div class="obgrid" id="obF">' + Object.keys(FIATS).filter(c => c !== f.base).map(c => tile(c, f.curs.includes(c))).join('') + '</div>'
+      + '<p class="oblbl">Крипта</p><div class="obgrid" id="obC">' + Object.keys(CINFO).map(c => tile(c, f.curs.includes(c))).join('') + '</div>';
+    if(step === 3) h = '<h2>Лимит на месяц</h2><p>Сколько готов тратить. Бот подскажет дневную норму и предупредит на 50%, 80% и 100%.</p>'
+      + '<div class="oblim glass"><input id="obLim" class="n" inputmode="decimal" value="' + (f.lim || '') + '" placeholder="0"><span>' + f.base + '</span></div>'
+      + '<div class="chips" id="obP">' + LIMP[f.base].map(p => chip(String(p), fmt(p,0) + ' ' + f.base, String(f.lim))).join('') + '</div>'
+      + '<p class="obnote">Всё это можно поменять потом в настройках.</p>';
+    $('obBody').innerHTML = '<div class="obstep' + (dir < 0 ? ' back' : '') + '">' + h + '</div>';
+    $('obNext').textContent = step === 3 ? (edit ? 'Сохранить' : 'Готово, поехали 🚀') : 'Дальше';
+    if(step === 0){ const i = $('obName'); i.oninput = () => { f.name = i.value; check() }; i.onkeydown = e => { if(e.key === 'Enter') next() } }
+    if(step === 1) $('obG').querySelectorAll('button').forEach(b => b.onclick = () => { if(f.base !== b.dataset.c){ const old = f.base; f.base = b.dataset.c; f.curs = f.curs.filter(c => c !== f.base); if(old && !f.curs.includes(old) && !edit) f.curs.unshift(old); f.lim = LIMP[f.base][2] } tick(); draw(0) });
+    if(step === 2) $('obBody').querySelectorAll('#obF button, #obC button').forEach(b => b.onclick = () => { const c = b.dataset.c; f.curs = f.curs.includes(c) ? f.curs.filter(x => x !== c) : [...f.curs, c]; b.classList.toggle('on'); tick() });
+    if(step === 3){ const i = $('obLim'); i.oninput = () => { f.lim = parseFloat(i.value.replace(',','.').replace(/\s/g,'')) || ''; $('obP').querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c.dataset.f === String(f.lim))); check() };
+      $('obP').querySelectorAll('.chip').forEach(c => c.onclick = () => { f.lim = +c.dataset.f; i.value = f.lim; $('obP').querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === c)); tick(); check() }) }
+    check();
+  }
+  function check(){ $('obNext').disabled = step === 0 ? !String(f.name || '').trim() : step === 1 ? !f.base : step === 3 ? !(f.lim > 0) : false }
+  function next(){
+    if($('obNext').disabled) return;
+    if(step < 3){ step++; haptic(); draw(1); return }
+    const body = {t:'profile', name:String(f.name).trim(), base:f.base, curs:f.curs, lim:f.lim};
+    if(window.__live){ send(body, 'Готово, ' + body.name + '! 🎉') }
+    else { Object.assign(D, {name:body.name, base:body.base, curs:body.curs, lim:body.lim, onb:true}); close(); const v = document.querySelector('.view.on'); window.RENDER[v ? v.id.slice(2) : 'home']() }
+  }
+  function open(isEdit){
+    const u = inTg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+    edit = !!isEdit; step = 0;
+    f = {name: D.name || (u && u.first_name) || '', base: B(), curs: Array.isArray(D.curs) && D.onb ? D.curs.slice() : ['GRAM'].concat(['BYN','RUB'].filter(c => c !== B())), lim: D.lim};
+    if(!D.onb && f.base === 'BYN' && !D.name) f.curs = ['GRAM','RUB'];
+    $('ob').hidden = false; document.body.style.overflow = 'hidden'; draw(1);
+  }
+  function close(){ $('ob').hidden = true; document.body.style.overflow = ''; try{ tg.BackButton.hide() }catch(e){} }
+  $('obNext').onclick = next;
+  $('obBack').onclick = () => { if(step > 0){ step--; tick(); draw(-1) } };
+  return {open, close, get on(){ return !$('ob').hidden }, back(){ if(step > 0){ step--; draw(-1); return true } if(edit){ close(); return true } return false }};
+})();
+window.onData = d => { if(!d.onb){ if(!OB.on) OB.open(false) } else if(OB.on) OB.close() };
+
 window.RENDER = {home:renderHome, hist:renderHist, stats:renderStats, set:renderSet, wallet:function(){ renderWallet(); renderDebts() }};
 
 function go(v){
@@ -645,14 +753,14 @@ document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.datas
 let opened = null;
 function openSheet(id){ opened = $(id); $('scrim').classList.add('on'); opened.classList.add('on'); haptic(); try{ tg.BackButton.show() }catch(e){} }
 function closeSheet(){ $('scrim').classList.remove('on'); if(opened) opened.classList.remove('on'); opened = null; try{ tg.BackButton.hide() }catch(e){} }
-$('scrim').onclick = closeSheet; try{ tg.BackButton.onClick(closeSheet) }catch(e){}
+$('scrim').onclick = closeSheet; try{ tg.BackButton.onClick(() => { if(OB.on) OB.back(); else closeSheet() }) }catch(e){}
 function send(obj, doneText){
   haptic('medium');
   if(inTg){ try{ tg.HapticFeedback.notificationOccurred('success'); tg.sendData(JSON.stringify(obj)); return }catch(e){} }
   closeSheet(); alert(inTg ? 'Бот сейчас недоступен, попробуй позже.' : (doneText || 'Готово') + '\n\nЭто демо: в настоящем мини-аппе запись уйдёт в бота.');
 }
 
-const CURS = () => [...new Set([B(),'GRAM','USDT','BYN','RUB','USD'])], QUICK = {BYN:[5,10,20,50,100], GRAM:[1,3,5,10], RUB:[300,500,1000,5000], USDT:[5,10,20,50], USD:[5,10,20,50], EUR:[5,10,20,50], UAH:[50,100,200,500], KZT:[500,1000,2000,5000], PLN:[10,20,50,100], BTC:[.001,.01], ETH:[.01,.1]};
+const CURS = () => [...new Set([B(), ...(D.onb && Array.isArray(D.curs) ? D.curs : ['GRAM','USDT','BYN','RUB','USD'])])], QUICK = {BYN:[5,10,20,50,100], GRAM:[1,3,5,10], RUB:[300,500,1000,5000], USDT:[5,10,20,50], USD:[5,10,20,50], EUR:[5,10,20,50], UAH:[50,100,200,500], KZT:[500,1000,2000,5000], PLN:[10,20,50,100], BTC:[.001,.01], ETH:[.01,.1]};
 let st = {kind:'exp', amt:'', cur:'BYN', cat:null};
 function suggestions(){ const m = {}; D.rec.filter(r => r[2]===st.kind).forEach(r => { const k = r[3].toLowerCase(); (m[k] = m[k] || {n:0, r}).n++ });
   return Object.values(m).sort((a,b) => b.n - a.n).slice(0,8).map(x => x.r) }
