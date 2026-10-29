@@ -29,6 +29,8 @@
     var v = currentView();
     document.querySelectorAll('.view').forEach(function(x){ x.classList.toggle('on', x.id === 'v-' + v) });
     window.RENDER[v]();
+    window.__live = true;
+    if(window.onData) window.onData(d);
     reveal();
   }
 
