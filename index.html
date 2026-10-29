@@ -174,6 +174,10 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
 .tx .ic .av{font-size:18px;line-height:1}.txh .ic .av{font-size:28px;line-height:1;color:#fff}.tx .a.neg{color:var(--red)}
 .pacts{display:flex;gap:8px;margin-top:12px}.pacts button{flex:1;height:52px;font-size:15px}.pacts .chip{justify-content:center;font-size:14px;font-weight:700;color:var(--ink)}
 .dx{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.06);color:var(--soft);font-size:15px;flex:none}
+.curg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.curg button{height:62px;border-radius:18px;border:1.5px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:700;font-size:13px;color:var(--soft);transition:border-color .2s,box-shadow .2s,color .2s}
+.curg button .ai{width:26px;height:26px;border-radius:9px;font-size:16px}.curg button.on{border-color:var(--g1);color:var(--ink);box-shadow:0 0 0 4px rgba(157,251,139,.12)}
+html[data-theme=ocean] .curg button.on{box-shadow:0 0 0 4px rgba(143,196,255,.16)}
 .thm{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
 .thm button{padding:8px 8px 12px;border-radius:22px;border:1.5px solid var(--line);font-weight:700;font-size:14px;display:flex;flex-direction:column;gap:10px;color:var(--soft);transition:border-color .2s,box-shadow .2s,color .2s}
 .thm button.on{border-color:var(--g1);color:var(--ink);box-shadow:0 0 0 4px rgba(157,251,139,.12)}
@@ -299,16 +303,21 @@ html[data-theme=ocean] .thm button.on{box-shadow:0 0 0 4px rgba(143,196,255,.16)
       </div>
     </div>
     <div class="glass card">
+      <h3>Основная валюта</h3>
+      <p>В ней лимит, отчёты и графики. При смене бот пересчитает историю по курсу Нацбанка.</p>
+      <div class="curg" id="baseCurs"></div>
+    </div>
+    <div class="glass card">
       <h3>Лимит на месяц</h3>
       <p>Бот напомнит, когда потратишь 50%, 80% и весь лимит.</p>
-      <div class="limin"><input id="limIn" class="n" inputmode="decimal"><span>BYN</span></div>
+      <div class="limin"><input id="limIn" class="n" inputmode="decimal"><span id="limCur">BYN</span></div>
       <div class="chips" id="presets" style="margin-bottom:14px"></div>
       <button class="primary" id="limSave">Сохранить лимит</button>
     </div>
     <div class="glass card">
       <h3>Можно писать прямо в бот</h3>
       <ul class="howto">
-        <li><code>шаурма 8</code><span>трата в BYN</span></li>
+        <li><code>шаурма 8</code><span id="howBase">трата в BYN</span></li>
         <li><code>vpn 3 gram</code><span>крипта по курсу</span></li>
         <li><code>5$ steam</code><span>доллары</span></li>
         <li><code>+1000 зп</code><span>доход</span></li>
@@ -430,6 +439,12 @@ const money = x => { const s = fmt(Math.abs(x)), k = s.indexOf(','); return k < 
 const emo = c => window.ICON ? ICON(c) : c.split(' ')[0], nm = c => c.split(' ').slice(1).join(' ');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rate = () => (D.gram && D.usd) ? (+D.gram) * (+D.usd) : null;
+const FIATS = {BYN:['🇧🇾','Белорусские рубли','Br'], RUB:['🇷🇺','Российские рубли','₽'], USD:['🇺🇸','Доллары','$'], EUR:['🇪🇺','Евро','€'], UAH:['🇺🇦','Гривны','₴'], KZT:['🇰🇿','Тенге','₸'], PLN:['🇵🇱','Злотые','zł']};
+const LIMP = {BYN:[300,500,800,1000,1500], RUB:[15000,25000,40000,60000,100000], USD:[200,300,500,800,1000], EUR:[200,300,500,800,1000], UAH:[8000,12000,20000,30000,40000], KZT:[80000,150000,200000,300000,400000], PLN:[800,1200,2000,3000,4000]};
+const CRYPTO = ['GRAM','USDT','BTC','ETH'];
+const B = () => FIATS[D.base] ? D.base : 'BYN';
+const fxByn = c => c === 'BYN' ? 1 : (D.fx && D.fx[c]) ? +D.fx[c] : c === 'RUB' && D.rub ? +D.rub : c === 'USD' && D.usd ? +D.usd : null;
+const toB = (v, c) => { const b = inByn(v, c), k = fxByn(B()); return b == null || !k ? null : b / k };
 const [Y, MO] = D.m.split('-').map(Number);
 const DIM = new Date(Y, MO, 0).getDate(), NOW = new Date();
 const IS_CUR = NOW.getFullYear()===Y && NOW.getMonth()+1===MO, TODAY = IS_CUR ? NOW.getDate() : DIM;
@@ -459,10 +474,10 @@ function renderHome(){
   const spentToday = IS_CUR ? (D.day[TODAY] || 0) : 0, daysLeft = DIM - TODAY + 1;
   const allowance = Math.max(0, (D.lim - (D.sp - spentToday)) / daysLeft), leftToday = allowance - spentToday;
   $('hero').classList.toggle('over', D.sp >= D.lim || leftToday < 0);
-  if(D.sp >= D.lim){ $('todayCap').textContent = 'Лимит месяца закончился'; $('todayBig').innerHTML = '−' + money(D.sp - D.lim) + '<small>BYN</small>'; $('todaySub').textContent = 'Новый лимит начнётся 1-го числа' }
-  else if(leftToday >= 0){ $('todayCap').textContent = 'Сегодня можно потратить'; $('todayBig').innerHTML = money(leftToday) + '<small>BYN</small>';
+  if(D.sp >= D.lim){ $('todayCap').textContent = 'Лимит месяца закончился'; $('todayBig').innerHTML = '−' + money(D.sp - D.lim) + '<small>' + B() + '</small>'; $('todaySub').textContent = 'Новый лимит начнётся 1-го числа' }
+  else if(leftToday >= 0){ $('todayCap').textContent = 'Сегодня можно потратить'; $('todayBig').innerHTML = money(leftToday) + '<small>' + B() + '</small>';
     $('todaySub').textContent = spentToday ? 'Уже потрачено ' + fmt(spentToday) + ' из ' + fmt(allowance) : 'Сегодня ещё ничего не потрачено' }
-  else { $('todayCap').textContent = 'Вышел за дневную норму'; $('todayBig').innerHTML = '−' + money(-leftToday) + '<small>BYN</small>'; $('todaySub').textContent = 'Норма была ' + fmt(allowance) + ', завтра станет чуть меньше' }
+  else { $('todayCap').textContent = 'Вышел за дневную норму'; $('todayBig').innerHTML = '−' + money(-leftToday) + '<small>' + B() + '</small>'; $('todaySub').textContent = 'Норма была ' + fmt(allowance) + ', завтра станет чуть меньше' }
   $('incV').textContent = '+' + fmt(D.in, 0); $('expV').textContent = '−' + fmt(D.sp, 0);
   requestAnimationFrame(() => $('limFill').style.width = (D.lim ? Math.min(100, D.sp / D.lim * 100) : 0) + '%');
   $('limL').textContent = 'Месяц: ' + fmt(D.sp,0) + ' из ' + fmt(D.lim,0); $('limR').textContent = fmt(D.sp / D.lim * 100, 0) + '%';
@@ -472,11 +487,11 @@ function renderHome(){
   for(let i=0;i<first;i++) c += '<div class="c e"></div>';
   for(let d=1; d<=DIM; d++){ const v = D.day[d] || 0, r = v / norm; let cl = 'c';
     if(IS_CUR && d > TODAY) cl += ' f'; else if(v > 0) cl += r > 1.25 ? ' ov' : r > .8 ? ' l3' : r > .35 ? ' l2' : ' l1';
-    if(IS_CUR && d === TODAY) cl += ' t'; c += '<div class="' + cl + '" title="' + d + ': ' + fmt(v) + ' BYN">' + d + '</div>' }
+    if(IS_CUR && d === TODAY) cl += ' t'; c += '<div class="' + cl + '" title="' + d + ': ' + fmt(v) + ' ' + B() + '">' + d + '</div>' }
   $('cal').innerHTML = c;
-  const left = D.lim - D.sp; $('monthLeft').textContent = left >= 0 ? 'Осталось ' + fmt(left) + ' BYN' : 'Перерасход ' + fmt(-left) + ' BYN';
+  const left = D.lim - D.sp; $('monthLeft').textContent = left >= 0 ? 'Осталось ' + fmt(left) + ' ' + B() : 'Перерасход ' + fmt(-left) + ' ' + B();
   if(IS_CUR && TODAY >= 3 && D.sp > 0){ const fc = D.sp / TODAY * DIM, diff = fc - D.lim;
-    $('forecast').innerHTML = 'В таком темпе к ' + DIM + '-му выйдет <b>' + fmt(fc,0) + ' BYN</b> — ' + (diff > 0 ? '<span class="bad">на ' + fmt(diff,0) + ' больше лимита</span>' : '<span class="good">' + fmt(-diff,0) + ' останется в запасе</span>') }
+    $('forecast').innerHTML = 'В таком темпе к ' + DIM + '-му выйдет <b>' + fmt(fc,0) + ' ' + B() + '</b> — ' + (diff > 0 ? '<span class="bad">на ' + fmt(diff,0) + ' больше лимита</span>' : '<span class="good">' + fmt(-diff,0) + ' останется в запасе</span>') }
   else $('forecast').textContent = '';
 
   const used = [...new Set(D.rec.map(r => r[4]))];
@@ -493,10 +508,10 @@ function listHTML(rows, totals){
     if(key !== last){ last = key;
       const lbl = key===td ? 'Сегодня' : key===yd ? 'Вчера' : dt.toLocaleDateString('ru-RU',{weekday:'long', day:'numeric', month:'long'});
       const tot = totals ? rows.filter(x => new Date(x[1]*1000).toDateString()===key && x[2]==='exp').reduce((s,x) => s + x[7], 0) : 0;
-      h += '<div class="dh"><span>' + lbl.replace(/^./, s=>s.toUpperCase()) + '</span>' + (tot ? '<span>−' + fmt(tot) + ' BYN</span>' : '') + '</div>' }
-    const main = cu==='BYN' ? fmt(b) : fmt(a,4) + ' ' + cu;
+      h += '<div class="dh"><span>' + lbl.replace(/^./, s=>s.toUpperCase()) + '</span>' + (tot ? '<span>−' + fmt(tot) + ' ' + B() + '</span>' : '') + '</div>' }
+    const main = cu===B() ? fmt(b) : fmt(a,4) + ' ' + cu;
     h += '<button class="tx" data-id="' + id + '"><span class="ic">' + emo(c) + '</span><span style="min-width:0"><span class="d" style="display:block">' + esc(ds) + '</span><span class="k" style="display:block">' + nm(c) + ' · ' + dt.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}) + '</span></span>'
-      + '<span class="a n ' + (k==='inc'?'inc':'') + '">' + (k==='inc'?'+':'−') + main + (cu!=='BYN' ? '<small>' + fmt(b) + ' BYN</small>' : '') + '</span></button>' });
+      + '<span class="a n ' + (k==='inc'?'inc':'') + '">' + (k==='inc'?'+':'−') + main + (cu!==B() ? '<small>' + fmt(b) + ' ' + B() + '</small>' : '') + '</span></button>' });
   return h;
 }
 function bindTx(root){ root.querySelectorAll('.tx').forEach(el => el.onclick = () => openTx(D.rec.find(r => r[0] == el.dataset.id))) }
@@ -507,7 +522,7 @@ function renderHist(){
   $('filters').innerHTML = opts.map(([k,l]) => chip(k, l, hf)).join('') + used.map(c => chip(c, emo(c) + ' ' + nm(c), hf)).join('');
   $('filters').querySelectorAll('.chip').forEach(b => b.onclick = () => { hf = b.dataset.f; tick(); renderHist() });
   const q = $('q').value.trim().toLowerCase();
-  const rows = D.rec.filter(r => (hf==='all' || (hf==='exp'&&r[2]==='exp') || (hf==='inc'&&r[2]==='inc') || (hf==='crypto'&&r[6]!=='BYN') || r[4]===hf)
+  const rows = D.rec.filter(r => (hf==='all' || (hf==='exp'&&r[2]==='exp') || (hf==='inc'&&r[2]==='inc') || (hf==='crypto'&&CRYPTO.includes(r[6])) || r[4]===hf)
     && (!q || (r[3] + ' ' + r[4] + ' ' + r[6]).toLowerCase().includes(q)));
   $('histList').innerHTML = rows.length ? listHTML(rows, true) : '<div class="empty">' + (q ? 'Ничего не нашлось по «' + esc(q) + '»' : 'Здесь пока пусто') + '</div>';
   bindTx($('histList'));
@@ -521,42 +536,47 @@ function renderStats(){
     const len = v / D.sp * C, gap = cats.length > 1 ? 9 : 0;
     const s = '<circle cx="100" cy="100" r="' + R + '" fill="none" stroke="' + catColor[c] + '" stroke-width="22" stroke-linecap="round" stroke-dasharray="' + Math.max(.1,len-gap) + ' ' + C + '" stroke-dashoffset="' + (-off-gap/2) + '"/>';
     off += len; return s }).join('');
-  $('donutSum').textContent = fmt(D.sp, 0) + ' BYN';
+  $('donutSum').textContent = fmt(D.sp, 0) + ' ' + B();
   $('allCats').innerHTML = cats.length ? cats.map(([c,v]) => '<div class="crow"><div class="t"><span>' + emo(c) + ' ' + nm(c) + '<em>' + fmt(v/D.sp*100,0) + '%</em></span><span class="n">' + fmt(v) + '</span></div><div class="bar"><i style="background:' + catColor[c] + '" data-w="' + (v/cats[0][1]*100) + '"></i></div></div>').join('')
     : '<div class="empty">Добавь пару трат, и здесь появится разбивка</div>';
   requestAnimationFrame(() => document.querySelectorAll('.crow .bar i').forEach(i => i.style.width = i.dataset.w + '%'));
   const vals = Array.from({length:DIM}, (_,i) => D.day[i+1] || 0), norm = D.lim / DIM, max = Math.max(norm * 1.6, ...vals) || 1;
   $('bars').innerHTML = vals.map((v,i) => '<i class="b ' + (IS_CUR && i+1 > TODAY ? 'fu' : v > norm*1.25 ? 'ov' : v > norm*.8 ? 'hi' : '') + '" style="height:' + Math.max(2, v/max*100) + '%"></i>').join('')
-    + '<div class="ln" style="bottom:calc(30px + ' + (norm/max)*(150-46) + 'px)"></div><div class="ax"><span>1</span><span>норма ' + fmt(norm,0) + ' BYN/день</span><span>' + DIM + '</span></div>';
+    + '<div class="ln" style="bottom:calc(30px + ' + (norm/max)*(150-46) + 'px)"></div><div class="ax"><span>1</span><span>норма ' + fmt(norm,0) + ' ' + B() + '/день</span><span>' + DIM + '</span></div>';
   const exp = D.rec.filter(r => r[2]==='exp'), big = exp.slice().sort((a,b) => b[7]-a[7])[0];
-  const maxDay = vals.reduce((m,v,i) => v > m[0] ? [v,i+1] : m, [0,0]), crypto = exp.filter(r => r[6] !== 'BYN').reduce((s,r) => s + r[7], 0);
+  const maxDay = vals.reduce((m,v,i) => v > m[0] ? [v,i+1] : m, [0,0]), crypto = exp.filter(r => CRYPTO.includes(r[6])).reduce((s,r) => s + r[7], 0);
   const prevPace = D.prev ? D.prev / new Date(Y, MO-1, 0).getDate() * TODAY : 0;
-  const facts = [['В среднем за день', fmt(D.sp / TODAY) + ' BYN', 'норма ' + fmt(norm,0) + ' BYN'],
-    ['Самый дорогой день', maxDay[0] ? fmt(maxDay[0]) + ' BYN' : '—', maxDay[0] ? new Date(Y, MO-1, maxDay[1]).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}) : ''],
-    ['Крупнейшая трата', big ? fmt(big[7]) + ' BYN' : '—', big ? esc(big[3]) : ''],
-    ['Потрачено криптой', fmt(crypto) + ' BYN', rate() ? '1 GRAM = ' + fmt(rate()) + ' BYN' : '']];
+  const facts = [['В среднем за день', fmt(D.sp / TODAY) + ' ' + B(), 'норма ' + fmt(norm,0) + ' ' + B()],
+    ['Самый дорогой день', maxDay[0] ? fmt(maxDay[0]) + ' ' + B() : '—', maxDay[0] ? new Date(Y, MO-1, maxDay[1]).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}) : ''],
+    ['Крупнейшая трата', big ? fmt(big[7]) + ' ' + B() : '—', big ? esc(big[3]) : ''],
+    ['Потрачено криптой', fmt(crypto) + ' ' + B(), toB(1,'GRAM') != null ? '1 GRAM = ' + fmt(toB(1,'GRAM')) + ' ' + B() : '']];
   if(prevPace){ const d = (D.sp - prevPace) / prevPace * 100; facts.push(['К прошлому месяцу', (d>0?'+':'') + fmt(d,0) + '%', d>0 ? 'тратишь быстрее' : 'тратишь медленнее']) }
   $('facts').innerHTML = facts.map(([k,v,e]) => '<div class="glass fact"><span>' + k + '</span><b class="n">' + v + '</b><em>' + e + '</em></div>').join('');
 }
 
 function renderSet(){
-  $('limIn').value = D.lim; const ps = [300, 500, 800, 1000, 1500];
-  const draw = () => { $('presets').innerHTML = ps.map(p => chip(String(p), p + ' BYN', String(+$('limIn').value))).join('');
+  $('limIn').value = D.lim; const ps = LIMP[B()]; $('limCur').textContent = B(); $('howBase').textContent = 'трата в ' + B();
+  $('baseCurs').innerHTML = Object.keys(FIATS).map(c => '<button class="' + (c === B() ? 'on' : '') + '" data-c="' + c + '">' + emo(c) + c + '</button>').join('');
+  $('baseCurs').querySelectorAll('button').forEach(b => b.onclick = () => { if(b.dataset.c !== B()) send({t:'base', c:b.dataset.c}, 'Основная валюта: ' + b.dataset.c) });
+  const draw = () => { $('presets').innerHTML = ps.map(p => chip(String(p), fmt(p,0) + ' ' + B(), String(+$('limIn').value))).join('');
     $('presets').querySelectorAll('.chip').forEach(b => b.onclick = () => { $('limIn').value = b.dataset.f; tick(); draw() });
     $('limSave').disabled = !(parseFloat($('limIn').value.replace(',','.')) > 0) || +$('limIn').value === D.lim };
   $('limIn').oninput = draw; draw();
-  $('ratesCard').innerHTML = '<h3>Курсы</h3><p>Обновляются, когда добавляешь трату в валюте</p><ul class="howto"><li><span style="color:var(--ink)">1 USD</span><b class="n">' + (D.usd ? fmt(+D.usd,4) + ' BYN' : '—') + '</b></li><li><span style="color:var(--ink)">💎 1 GRAM</span><b class="n">' + (rate() ? fmt(rate()) + ' BYN' : '—') + '</b></li></ul>';
+  const rl = ['USD','EUR','RUB','BYN'].filter(c => c !== B() && fxByn(c)).map(c => { const v = toB(1, c); return '<li><span style="color:var(--ink)">' + FIATS[c][0] + ' 1 ' + c + '</span><b class="n">' + (v == null ? '—' : fmt(v, v < .1 ? 4 : 2) + ' ' + B()) + '</b></li>' }).join('');
+  $('ratesCard').innerHTML = '<h3>Курсы</h3><p>Нацбанк РБ и CoinGecko, обновляются сами</p><ul class="howto">' + rl + '<li><span style="color:var(--ink)">💎 1 GRAM</span><b class="n">' + (toB(1,'GRAM') != null ? fmt(toB(1,'GRAM')) + ' ' + B() : '—') + '</b></li></ul>';
 }
-$('limSave').onclick = () => { const v = parseFloat($('limIn').value.replace(',','.')); if(v > 0) send({t:'limit', v}, 'Лимит ' + fmt(v,0) + ' BYN сохранён') };
+$('limSave').onclick = () => { const v = parseFloat($('limIn').value.replace(',','.')); if(v > 0) send({t:'limit', v}, 'Лимит ' + fmt(v,0) + ' ' + B() + ' сохранён') };
 
-const WALLETS = [{k:'cr', c:'GRAM', t:'Крипта', e:'GRAM', sym:'GRAM'}, {k:'by', c:'BYN', t:'Белорусские рубли', e:'BYN', sym:'Br'}, {k:'ru', c:'RUB', t:'Российские рубли', e:'RUB', sym:'₽'}];
-const inByn = (v, c) => c==='BYN' ? v : c==='RUB' ? (D.rub ? v * D.rub : null) : c==='GRAM' ? (rate() ? v * rate() : null) : (c==='USDT' || c==='USD') && D.usd ? v * D.usd : null;
+function WALLETS(){ const w = D.w || {}, b = B(), card = (c, k) => ({k, c, t:FIATS[c][1], e:c, sym:FIATS[c][2]});
+  const extra = Object.keys(FIATS).filter(c => c !== b && ((['BYN','RUB'].includes(c) && ['BYN','RUB'].includes(b)) || Math.abs(w[c] || 0) > .004));
+  return [{k:'cr', c:'GRAM', t:'Крипта', e:'GRAM', sym:'GRAM'}, card(b, 'by'), ...extra.map(c => card(c, 'ru'))] }
+const inByn = (v, c) => { if(c === 'GRAM') return rate() ? v * rate() : null; if(c === 'USDT') return D.usd ? v * D.usd : null; const k = fxByn(c); return k ? v * k : null };
 function renderWallet(){
   const w = D.w || {}, last = D.last || {}; let total = 0, all = true;
-  Object.keys(w).forEach(c => { const b = inByn(w[c], c); if(b == null) all = false; else total += b });
-  $('wTotal').innerHTML = 'Всего ≈ <b class="n">' + fmt(total) + ' BYN</b>' + (all ? '' : ' · не все курсы загружены');
-  $('wCards').innerHTML = WALLETS.map(x => {
-    const v = w[x.c] || 0, b = inByn(v, x.c); let sub = x.c !== 'BYN' && b != null ? '≈ ' + fmt(b) + ' BYN' : '';
+  Object.keys(w).forEach(c => { const b = toB(w[c], c); if(b == null) all = false; else total += b });
+  $('wTotal').innerHTML = 'Всего ≈ <b class="n">' + fmt(total) + ' ' + B() + '</b>' + (all ? '' : ' · не все курсы загружены');
+  $('wCards').innerHTML = WALLETS().map(x => {
+    const v = w[x.c] || 0, b = toB(v, x.c); let sub = x.c !== B() && b != null ? '≈ ' + fmt(b) + ' ' + B() : '';
     if(x.c === 'GRAM' && w.USDT) sub += (sub ? ' · ' : '') + '+ ' + fmt(w.USDT) + ' USDT';
     const li = last[x.c] ? 'Последнее поступление: ' + new Date(last[x.c]*1000).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}) : 'Поступлений пока не было';
     return '<div class="wcard ' + x.k + '"><div class="wt"><span>' + x.t + '</span><span class="wi">' + emo(x.e) + '</span></div><div class="wb n">' + (v < 0 ? '−' : '') + money(v) + '<small>' + x.sym + '</small></div>'
@@ -565,7 +585,7 @@ function renderWallet(){
   $('wCards').querySelectorAll('[data-bal]').forEach(b => b.onclick = () => openBal(b.dataset.bal));
 }
 let balCur = 'BYN';
-function openBal(c){ balCur = c; const x = WALLETS.find(w => w.c === c); $('balLbl').textContent = 'СЕЙЧАС ЛЕЖИТ · ' + x.t.toUpperCase(); $('balCur').textContent = x.sym;
+function openBal(c){ balCur = c; const x = WALLETS().find(w => w.c === c); $('balLbl').textContent = 'СЕЙЧАС ЛЕЖИТ · ' + x.t.toUpperCase(); $('balCur').textContent = x.sym;
   $('balIn').value = (D.w && D.w[c]) || 0; openSheet('sBal'); setTimeout(() => $('balIn').select(), 350) }
 $('balSave').onclick = () => { const v = parseFloat($('balIn').value.replace(',','.').replace(/\s/g,'')); if(!isNaN(v)) send({t:'bal', c:balCur, v}, 'Баланс обновлён') };
 const hue = k => { let h = 0; for (const ch of String(k)) h = (h * 31 + ch.charCodeAt(0)) % 360; return h };
@@ -585,12 +605,12 @@ function renderDebts(){
   $('dList').querySelectorAll('.dp').forEach(b => b.onclick = () => openPerson(b.dataset.k));
 }
 let dk = 'lend', dcur = 'BYN';
-function openDebt(name, kind){ dk = kind || 'lend'; dcur = 'BYN'; $('dName').value = name || ''; $('dAmt').value = ''; $('dNote').value = ''; drawDebt(); openSheet('sDebt'); setTimeout(() => (name ? $('dAmt') : $('dName')).focus(), 350) }
+function openDebt(name, kind){ dk = kind || 'lend'; dcur = B(); $('dName').value = name || ''; $('dAmt').value = ''; $('dNote').value = ''; drawDebt(); openSheet('sDebt'); setTimeout(() => (name ? $('dAmt') : $('dName')).focus(), 350) }
 function drawDebt(){
   $('dKind').querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.k === dk); b.classList.toggle('out', b.dataset.k === 'lend') });
   $('dPeople').innerHTML = (D.debts || []).slice(0, 10).map(p => chip(p.n, avatar(p).replace('class="av"', 'class="av" style="width:22px;height:22px;font-size:11px;--h:' + hue(p.k) + '"') + ' ' + esc(p.n), $('dName').value.trim())).join('');
   $('dPeople').querySelectorAll('.chip').forEach(b => b.onclick = () => { $('dName').value = b.dataset.f; tick(); drawDebt() });
-  $('dCurs').innerHTML = ['BYN','GRAM','USDT','RUB','USD'].map(c => chip(c, c, dcur)).join('');
+  $('dCurs').innerHTML = [...new Set([B(),'GRAM','USDT','BYN','RUB','USD'])].map(c => chip(c, c, dcur)).join('');
   $('dCurs').querySelectorAll('.chip').forEach(b => b.onclick = () => { dcur = b.dataset.f; tick(); drawDebt() });
   const ok = $('dName').value.trim() && parseFloat($('dAmt').value.replace(',','.')) > 0;
   $('dSave').disabled = !ok; $('dSave').textContent = dk === 'lend' ? 'Записать: я дал в долг' : 'Записать: я взял в долг';
@@ -601,7 +621,7 @@ $('debtAdd').onclick = () => openDebt();
 $('dSave').onclick = () => { const a = parseFloat($('dAmt').value.replace(',','.')), n = $('dName').value.trim(); if(n && a > 0) send({t:'debt', kind:dk, name:n, a, c:dcur, note:$('dNote').value.trim()}, 'Долг записан') };
 function openPerson(k){
   const p = (D.debts || []).find(x => x.k === k); if(!p) return;
-  const e = openBal_(p.b), v = e.length ? e[0][1] : 0, c = e.length ? e[0][0] : 'BYN';
+  const e = openBal_(p.b), v = e.length ? e[0][1] : 0, c = e.length ? e[0][0] : B();
   $('pHead').innerHTML = '<div class="ic">' + avatar(p) + '</div><b>' + esc(p.n) + '</b><div class="a n" style="color:' + (v > 0 ? 'var(--g1)' : v < 0 ? 'var(--red)' : 'var(--ink)') + '">'
     + (e.length ? e.map(([c,x]) => fmt(Math.abs(x)) + ' ' + c).join(' + ') : '0') + '</div><span>' + (v > 0 ? 'должен тебе' : v < 0 ? 'ты должен' : 'вы в расчёте') + '</span>';
   $('pAmt').value = e.length ? Math.abs(v) : '';
@@ -632,7 +652,7 @@ function send(obj, doneText){
   closeSheet(); alert(inTg ? 'Бот сейчас недоступен, попробуй позже.' : (doneText || 'Готово') + '\n\nЭто демо: в настоящем мини-аппе запись уйдёт в бота.');
 }
 
-const CURS = ['BYN','GRAM','RUB','USDT','USD'], QUICK = {BYN:[5,10,20,50,100], GRAM:[1,3,5,10], RUB:[300,500,1000,5000], USDT:[5,10,20,50], USD:[5,10,20,50]};
+const CURS = () => [...new Set([B(),'GRAM','USDT','BYN','RUB','USD'])], QUICK = {BYN:[5,10,20,50,100], GRAM:[1,3,5,10], RUB:[300,500,1000,5000], USDT:[5,10,20,50], USD:[5,10,20,50], EUR:[5,10,20,50], UAH:[50,100,200,500], KZT:[500,1000,2000,5000], PLN:[10,20,50,100], BTC:[.001,.01], ETH:[.01,.1]};
 let st = {kind:'exp', amt:'', cur:'BYN', cat:null};
 function suggestions(){ const m = {}; D.rec.filter(r => r[2]===st.kind).forEach(r => { const k = r[3].toLowerCase(); (m[k] = m[k] || {n:0, r}).n++ });
   return Object.values(m).sort((a,b) => b.n - a.n).slice(0,8).map(x => x.r) }
@@ -640,13 +660,13 @@ function drawAdd(){
   $('kind').querySelectorAll('button').forEach(b => { b.classList.toggle('on', b.dataset.k === st.kind); b.classList.toggle('out', b.dataset.k === 'exp') });
   $('amtLbl').textContent = st.kind === 'inc' ? 'НОВЫЙ ДОХОД' : 'НОВАЯ ТРАТА';
   $('amt').textContent = (st.amt || '0').replace('.', ',') + ' ' + st.cur; $('amt').classList.toggle('zero', !st.amt);
-  const n = parseFloat(st.amt), r = st.cur==='BYN' ? 1 : st.cur==='GRAM' ? rate() : st.cur==='RUB' ? (D.rub ? +D.rub : null) : D.usd ? +D.usd : null;
-  $('eq').textContent = st.cur === 'BYN' ? '' : n > 0 && r ? '≈ ' + fmt(n*r) + ' BYN' : 'бот пересчитает в BYN по курсу';
-  $('curs').innerHTML = CURS.map(c => chip(c, (c === 'GRAM' || c === 'RUB' || c === 'BYN') ? emo(c) + ' ' + c : c, st.cur)).join('');
+  const n = parseFloat(st.amt), eqv = n > 0 ? toB(n, st.cur) : null;
+  $('eq').textContent = st.cur === B() ? '' : eqv != null ? '≈ ' + fmt(eqv) + ' ' + B() : 'бот пересчитает в ' + B() + ' по курсу';
+  $('curs').innerHTML = CURS().map(c => chip(c, emo(c) + ' ' + c, st.cur)).join('');
   $('curs').querySelectorAll('.chip').forEach(b => b.onclick = () => { st.cur = b.dataset.f; tick(); drawAdd() });
-  $('quick').innerHTML = QUICK[st.cur].map(q => '<button class="chip" data-q="' + q + '">' + q + ' ' + st.cur + '</button>').join('');
+  $('quick').innerHTML = (QUICK[st.cur] || []).map(q => '<button class="chip" data-q="' + q + '">' + q + ' ' + st.cur + '</button>').join('');
   $('quick').querySelectorAll('.chip').forEach(b => b.onclick = () => { st.amt = b.dataset.q; tick(); drawAdd() });
-  $('sugg').innerHTML = suggestions().map(r => '<button class="chip" data-d="' + esc(r[3]) + '" data-c="' + esc(r[4]) + '" data-a="' + (r[6]==='BYN'?r[5]:'') + '">' + emo(r[4]) + ' ' + esc(r[3]) + '</button>').join('');
+  $('sugg').innerHTML = suggestions().map(r => '<button class="chip" data-d="' + esc(r[3]) + '" data-c="' + esc(r[4]) + '" data-a="' + (r[6]===B()?r[5]:'') + '">' + emo(r[4]) + ' ' + esc(r[3]) + '</button>').join('');
   $('sugg').querySelectorAll('.chip').forEach(b => b.onclick = () => { $('desc').value = b.dataset.d; st.cat = b.dataset.c; if(!st.amt && b.dataset.a) st.amt = b.dataset.a; tick(); drawAdd() });
   const list = st.kind==='inc' ? D.ic : D.ec;
   $('cats').innerHTML = list.map(c => chip(c, emo(c) + ' ' + nm(c), st.cat)).join('');
@@ -661,7 +681,7 @@ $('pad').querySelectorAll('button').forEach(b => b.onclick = () => { const k = b
   st.amt = a; tick(); drawAdd() });
 $('kind').querySelectorAll('button').forEach(b => b.onclick = () => { st.kind = b.dataset.k; st.cat = null; tick(); drawAdd() });
 $('desc').onkeydown = e => { if(e.key === 'Enter') e.target.blur() };
-function openAdd(k, c){ st = {kind:k||'exp', amt:'', cur:c||'BYN', cat:null}; $('desc').value = ''; drawAdd(); openSheet('sAdd') }
+function openAdd(k, c){ st = {kind:k||'exp', amt:'', cur:c||B(), cat:null}; $('desc').value = ''; drawAdd(); openSheet('sAdd') }
 $('plus').onclick = () => openAdd();
 $('save').onclick = () => { const a = parseFloat(st.amt); if(a > 0) send({t:'add', a, c:st.cur, d:$('desc').value.trim(), cat:st.cat, inc: st.kind==='inc'}, (st.kind==='inc'?'Доход':'Трата') + ' сохранена: ' + fmt(a,4) + ' ' + st.cur) };
 document.addEventListener('keydown', e => { if(opened !== $('sAdd') || document.activeElement === $('desc')) return;
@@ -671,8 +691,8 @@ document.addEventListener('keydown', e => { if(opened !== $('sAdd') || document.
 
 let cur = null, armed = false;
 function openTx(r){ if(!r) return; cur = r; armed = false; const [id,ts,k,ds,c,a,cu,b] = r;
-  $('txHead').innerHTML = '<div class="ic">' + emo(c) + '</div><b>' + esc(ds) + '</b><div class="a n" style="color:' + (k==='inc'?'var(--g1)':'var(--ink)') + '">' + (k==='inc'?'+':'−') + (cu==='BYN' ? fmt(b) + ' BYN' : fmt(a,4) + ' ' + cu) + '</div><span>'
-    + (cu!=='BYN' ? '≈ ' + fmt(b) + ' BYN · ' : '') + new Date(ts*1000).toLocaleString('ru-RU',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}) + '</span>';
+  $('txHead').innerHTML = '<div class="ic">' + emo(c) + '</div><b>' + esc(ds) + '</b><div class="a n" style="color:' + (k==='inc'?'var(--g1)':'var(--ink)') + '">' + (k==='inc'?'+':'−') + (cu===B() ? fmt(b) + ' ' + B() : fmt(a,4) + ' ' + cu) + '</div><span>'
+    + (cu!==B() ? '≈ ' + fmt(b) + ' ' + B() + ' · ' : '') + new Date(ts*1000).toLocaleString('ru-RU',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}) + '</span>';
   const list = k==='inc' ? D.ic : D.ec;
   $('txCats').innerHTML = list.map(x => chip(x, emo(x) + ' ' + nm(x), c)).join('');
   $('txCats').querySelectorAll('.chip').forEach(btn => btn.onclick = () => { if(btn.dataset.f !== c) send({t:'cat', id, cat:btn.dataset.f}, 'Перенёс в «' + nm(btn.dataset.f) + '»') });
