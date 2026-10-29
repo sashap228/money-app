@@ -270,6 +270,39 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
 .prof button{margin-left:auto;height:38px;padding:0 14px;border-radius:99px;font-size:13px;font-weight:700;color:var(--g1);background:rgba(255,255,255,.06)}
 .pcurs{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}.pcurs>span{display:flex;align-items:center;gap:6px;height:32px;padding:0 11px 0 5px;border-radius:99px;font-size:13px;font-weight:700;background:rgba(255,255,255,.06)}
 .pcurs .ai{width:22px;height:22px;border-radius:50%;font-size:13px}
+/* ---------- дела ---------- */
+.tsub{margin:-8px 2px 14px;color:var(--soft);font-size:14px}
+.tquick{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 16px;border-radius:20px;margin-bottom:6px}
+.tquick input{flex:1;min-width:0;height:44px;font-size:15px;font-weight:500;outline:none}.tquick input::placeholder{color:var(--faint)}
+.tquick button{width:44px;height:44px;border-radius:15px;flex:none;font-size:24px;font-weight:600;color:var(--gink);background:linear-gradient(140deg,var(--g1),var(--g2));box-shadow:0 6px 18px -6px var(--g2)}
+.thint{font-size:12px;color:var(--faint);margin:0 4px 6px}
+.tdh{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--soft);margin:18px 6px 8px}.tdh.late{color:var(--red)}
+.tk{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:center;padding:4px 2px;animation:m-up .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 35ms)}
+.tk+.tk{border-top:1px solid var(--line)}
+.cb{width:26px;height:26px;border-radius:50%;border:2px solid var(--faint);display:grid;place-items:center;transition:background .25s,border-color .25s,transform .25s cubic-bezier(.3,1.6,.5,1)}
+.cb svg{width:15px;height:15px;stroke:var(--gink);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .35s .08s}
+.tk.done .cb{background:var(--g1);border-color:var(--g1);transform:scale(1.1)}.tk.done .cb svg{stroke-dashoffset:0}
+.tt{text-align:left;padding:10px 0;min-width:0}.tt b{display:block;font-weight:600;transition:color .3s}.tt span{display:block;font-size:12px;color:var(--soft);margin-top:2px}.tt span.late{color:var(--red)}
+.tk.done .tt b{text-decoration:line-through;color:var(--faint)}
+.dlist{opacity:.75}
+.tsel{position:relative}.tsel input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+/* ---------- цели ---------- */
+.gl{display:block;width:100%;text-align:left;padding:16px;margin-bottom:10px;animation:m-up .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 50ms)}
+.gl .gh{display:flex;align-items:center;gap:12px}
+.ge{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:24px;background:rgba(255,255,255,.07);flex:none}
+.gl .gn{flex:1;min-width:0}.gl .gn b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gl .gn span{font-size:12px;color:var(--soft)}
+.gl .gp{font-size:20px;font-weight:800}
+.gbar{height:10px;border-radius:9px;background:rgba(255,255,255,.07);margin:14px 0 8px;overflow:hidden}
+.gbar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--g2),var(--g1));box-shadow:0 0 14px -2px var(--g2);transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.gbar.big{height:14px;margin:6px 0 4px}
+.gl .gs{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--soft)}.gl .gs b{color:var(--ink)}
+.gl.dn{border-color:rgba(255,209,102,.35)}.gl.dn .gbar i{background:linear-gradient(90deg,#ffb84d,#ffd166);box-shadow:0 0 14px -2px #ffb84d}.gl.dn .gp{color:#ffd166}
+.gempty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:22px 18px}.gempty .ge{font-size:30px;width:58px;height:58px;border-radius:19px;margin-bottom:4px}.gempty b{font-size:16px}.gempty span:last-child{font-size:13px;color:var(--soft);max-width:280px}
+.gsum{font-size:13px;color:var(--soft);text-align:center;margin-top:6px}.gsum b{color:var(--ink)}
+.cf{position:fixed;inset:0;pointer-events:none;z-index:70;overflow:hidden}.cf i{position:absolute;top:-24px;border-radius:2px;animation:cf linear forwards}
+@keyframes cf{to{transform:translate(var(--x),110vh) rotate(var(--r))}}
+@keyframes m-up{from{opacity:0;transform:translateY(10px)}}
+.bar4{padding:0 4px}.t{width:42px;height:42px}.t svg{width:22px;height:22px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <script src="icons.js"></script>
@@ -309,6 +342,8 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
     <h1>Кошелёк</h1>
     <p class="wsum" id="wTotal"></p>
     <div id="wCards"></div>
+    <h2>Цели <button id="goalAdd">+ Цель</button></h2>
+    <div id="gList"></div>
     <h2>Долги <button id="debtAdd">+ Записать</button></h2>
     <div class="dsum" id="dSum"></div>
     <div class="glass list" id="dList"></div>
@@ -332,6 +367,14 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
     <div class="glass bars" id="bars"></div>
     <h2>Факты</h2>
     <div class="facts" id="facts"></div>
+  </main>
+
+  <main class="view" id="v-tasks">
+    <h1>Дела</h1>
+    <p class="tsub" id="tSub"></p>
+    <div class="tquick glass"><input id="tqIn" maxlength="200" placeholder="Завтра в 18 сделать пост" enterkeyhint="done"><button id="tqGo" aria-label="Добавить">+</button></div>
+    <p class="thint">Пиши как боту: «через 2 часа забрать заказ», «в пятницу позвонить маме»</p>
+    <div id="tList"></div>
   </main>
 
   <main class="view" id="v-set">
@@ -381,6 +424,7 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
   <div class="bar4">
     <button class="t on" data-go="home" aria-label="Главная"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></button>
     <button class="t" data-go="wallet" aria-label="Кошелёк"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h12v4"/><path d="M3 7v11a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2z"/><circle cx="16" cy="14.5" r="1.2"/></svg></button>
+    <button class="t" data-go="tasks" aria-label="Дела"><svg viewBox="0 0 24 24"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M3.5 6.5l1.3 1.3L7.3 5.3M3.5 12l1.3 1.3 2.5-2.5M3.5 17.5l1.3 1.3 2.5-2.5"/></svg></button>
     <button class="t" data-go="hist" aria-label="История"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></svg></button>
     <button class="t" data-go="stats" aria-label="Статистика"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg></button>
     <button class="t" data-go="set" aria-label="Настройки"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
@@ -416,6 +460,43 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
     <div class="eq">Введи, сколько сейчас реально лежит. Дальше доходы и траты будут считаться от этой суммы.</div>
   </div>
   <button class="primary" id="balSave" style="margin-top:14px">Сохранить баланс</button>
+</div>
+
+<div class="sheet" id="sTask">
+  <div class="grab"></div>
+  <div class="glass field" style="margin-top:0"><label>Что сделать</label><input id="tkText" maxlength="200" placeholder="Сделать пост, купить молоко…" autocomplete="off"></div>
+  <p class="sl">Когда</p><div class="row" id="tkDays"></div>
+  <p class="sl">Во сколько</p><div class="row" id="tkTimes"></div>
+  <button class="primary" id="tkSave" style="margin-top:16px" disabled>Добавить дело</button>
+</div>
+
+<div class="sheet" id="sTaskAct">
+  <div class="grab"></div>
+  <div class="txh" id="taHead"></div>
+  <div class="pacts" id="taActs"></div>
+  <button class="danger" id="taDel">Удалить</button>
+</div>
+
+<div class="sheet" id="sGoalNew">
+  <div class="grab"></div>
+  <div class="txh"><div class="ic" id="gnEmo" style="display:grid;place-items:center;font-size:46px">🎯</div><b>Новая цель</b></div>
+  <div class="row" id="gnEmos" style="margin-top:4px"></div>
+  <div class="glass field"><label>На что копишь</label><input id="gnName" maxlength="40" placeholder="Айфон, отпуск, подушка…" autocomplete="off"></div>
+  <div class="glass field"><label>Сколько нужно</label><input id="gnAmt" class="n" inputmode="decimal" placeholder="0"></div>
+  <div class="row" id="gnCurs"></div>
+  <p class="sl">Срок</p><div class="row" id="gnDl"></div>
+  <button class="primary" id="gnSave" style="margin-top:16px" disabled>Создать цель</button>
+</div>
+
+<div class="sheet" id="sGoal">
+  <div class="grab"></div>
+  <div class="txh" id="gHead"></div>
+  <div class="gbar big"><i id="gBarI"></i></div>
+  <p class="gsum" id="gSum"></p>
+  <div class="glass field"><label>Сумма</label><input id="gAmt" class="n" inputmode="decimal" placeholder="0"></div>
+  <div class="row" id="gQuick"></div>
+  <div class="pacts"><button class="primary" id="gIn">🐷 Отложить</button><button class="chip" id="gOut">Взять обратно</button></div>
+  <button class="danger" id="gDel">Удалить цель</button>
 </div>
 
 <div class="sheet" id="sDebt">
@@ -476,7 +557,7 @@ function demo(){
     ic:["💼 Зарплата","📢 Реклама и каналы","🪙 Крипта","🎁 Подарок","💰 Другой доход"]};
 }
 let D = decode();
-if(!D){ D = demo(); if(inTg){ document.body.style.visibility = 'hidden'; setTimeout(function(){ document.body.style.visibility = '' }, 15000) } else $('demo').hidden = false }
+if(!D){ D = demo(); Object.assign(D, demoExtra()); if(inTg){ document.body.style.visibility = 'hidden'; setTimeout(function(){ document.body.style.visibility = '' }, 15000) } else $('demo').hidden = false }
 
 const THEMES = {
   neon: {bg:'#070a08', head:'#070a08', pal:['#9dfb8b','#5fd36f','#d4ff6a','#38e0b0','#7ad7ff','#ffd166','#ff9f6b','#c89bff','#ff8fb1','#a7f3d0','#e4ff9b','#6ee7b7','#fca5a5','#93a093']},
@@ -741,7 +822,141 @@ const OB = (() => {
 })();
 window.onData = d => { if(!d.onb){ if(!OB.on) OB.open(false) } else if(OB.on) OB.close() };
 
-window.RENDER = {home:renderHome, hist:renderHist, stats:renderStats, set:renderSet, wallet:function(){ renderWallet(); renderDebts() }};
+// ---------- дела ----------
+const dayStart = (o = 0) => { const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() + o); return d.getTime() / 1000 };
+const WDN = ['вс','пн','вт','ср','чт','пт','сб'], MONN = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+const hhmm = ts => new Date(ts*1000).toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+function dueLabel(due, ht){ const d = new Date(due*1000), dd = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()/1000 - dayStart(0)) / 86400);
+  const day = dd === 0 ? 'сегодня' : dd === 1 ? 'завтра' : dd === 2 ? 'послезавтра' : dd === -1 ? 'вчера' : WDN[d.getDay()] + ', ' + d.getDate() + ' ' + MONN[d.getMonth()] + (d.getFullYear() !== new Date().getFullYear() ? ' ' + d.getFullYear() : '');
+  return ht ? day + ' в ' + hhmm(due) : day }
+const plural = (n, a, b, c) => { n = Math.abs(n) % 100; const k = n % 10; return n > 10 && n < 20 ? c : k > 1 && k < 5 ? b : k === 1 ? a : c };
+function renderTasks(){
+  const L = D.tasks || [], now = Date.now()/1000, t0 = dayStart(0), t1 = dayStart(1), t2 = dayStart(2);
+  const open = L.filter(x => !x[4]), done = L.filter(x => x[4]).sort((a,b) => b[4]-a[4]);
+  const G = [['late','🔴 Просрочено',[]],['today','📌 Сегодня',[]],['tom','🌅 Завтра',[]],['later','🗓 Позже',[]],['none','🗂 Без даты',[]]];
+  open.forEach(x => { const due = x[2], ht = x[3]; G[due == null ? 4 : (ht ? due < now : due < t0) ? 0 : due < t1 ? 1 : due < t2 ? 2 : 3][2].push(x) });
+  const nToday = G[0][2].length + G[1][2].length;
+  $('tSub').textContent = open.length ? (nToday ? 'На сегодня ' + nToday + ' ' + plural(nToday,'дело','дела','дел') : 'На сегодня всё чисто ✨') + ' · всего ' + open.length : 'Список пуст — можно отдыхать 😌';
+  let i = 0;
+  const item = x => { const [id, text, due, ht, dn] = x, late = !dn && due && (ht ? due < now : due < t0);
+    const meta = !due ? '' : late ? dueLabel(due, ht) : ht ? (due < t2 ? hhmm(due) : dueLabel(due, ht)) : (due < t2 ? '' : dueLabel(due, 0));
+    return '<div class="tk' + (dn ? ' done' : '') + '" data-id="' + id + '" style="--i:' + (i++) + '"><button class="cb" aria-label="Готово"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="tt"><b>' + esc(text) + '</b>' + (meta ? '<span' + (late ? ' class="late"' : '') + '>' + (ht && !late ? '⏰ ' : '') + meta + '</span>' : '') + '</button></div>' };
+  let h = '';
+  G.forEach(([k, lbl, arr]) => { if(arr.length) h += '<p class="tdh' + (k === 'late' ? ' late' : '') + '"><span>' + lbl + '</span><span>' + arr.length + '</span></p><div class="glass list">' + arr.map(item).join('') + '</div>' });
+  if(done.length) h += '<p class="tdh"><span>✅ Сделано</span><span>' + done.length + '</span></p><div class="glass list dlist">' + done.map(item).join('') + '</div>';
+  $('tList').innerHTML = h || '<div class="glass empty" style="padding:34px 18px;margin-top:14px"><div style="font-size:44px">🙌</div><b style="display:block;font-size:17px;margin:8px 0 4px;color:var(--ink)">Дел нет</b>Добавь первое сверху или напиши боту</div>';
+  $('tList').querySelectorAll('.tk').forEach(el => { const id = +el.dataset.id, x = L.find(t => t[0] === id);
+    el.querySelector('.cb').onclick = () => { const v = !el.classList.contains('done'); el.classList.toggle('done', v); haptic(v ? 'medium' : 'light'); setTimeout(() => send({t:'taskdone', id, v}, v ? 'Готово! 💪' : 'Вернул в дела'), 420) };
+    el.querySelector('.tt').onclick = () => openTaskAct(x) });
+}
+const quickTask = () => { const v = $('tqIn').value.trim(); if(!v) return; $('tqIn').value = ''; $('tqIn').blur(); send({t:'task', text:v}, 'Записал 📝') };
+$('tqGo').onclick = quickTask; $('tqIn').onkeydown = e => { if(e.key === 'Enter') quickTask() };
+let tk = {day:null, time:null};
+function drawTask(){
+  const days = [['none','Без даты',null],['0','Сегодня',0],['1','Завтра',1],['2','Послезавтра',2]];
+  for(let o = 3; o < 7; o++){ const d = new Date(dayStart(o)*1000); days.push([String(o), WDN[d.getDay()].replace(/^./, c => c.toUpperCase()) + ', ' + d.getDate(), o]) }
+  const custom = typeof tk.day === 'string' && tk.day.includes('-');
+  $('tkDays').innerHTML = days.map(([k,l]) => '<button class="chip ' + ((tk.day == null ? 'none' : String(tk.day)) === k ? 'on' : '') + '" data-d="' + k + '">' + l + '</button>').join('')
+    + '<label class="chip tsel ' + (custom ? 'on' : '') + '">📅 ' + (custom ? new Date(tk.day + 'T00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short'}) : 'Дата') + '<input type="date" id="tkDate"></label>';
+  const times = [['none','Без времени'],['09:00','09:00'],['13:00','13:00'],['19:00','19:00'],['21:00','21:00']], ct = tk.time && !times.some(t => t[0] === tk.time);
+  $('tkTimes').innerHTML = times.map(([k,l]) => '<button class="chip ' + ((tk.time || 'none') === k ? 'on' : '') + '" data-t="' + k + '">' + l + '</button>').join('')
+    + '<label class="chip tsel ' + (ct ? 'on' : '') + '">🕐 ' + (ct ? tk.time : 'Своё') + '<input type="time" id="tkTime"></label>';
+  $('tkDays').querySelectorAll('[data-d]').forEach(b => b.onclick = () => { tk.day = b.dataset.d === 'none' ? null : +b.dataset.d; if(tk.day == null) tk.time = null; tick(); drawTask() });
+  $('tkTimes').querySelectorAll('[data-t]').forEach(b => b.onclick = () => { tk.time = b.dataset.t === 'none' ? null : b.dataset.t; if(tk.time && tk.day == null) tk.day = 0; tick(); drawTask() });
+  $('tkDate').onchange = e => { if(e.target.value){ tk.day = e.target.value; tick(); drawTask() } };
+  $('tkTime').onchange = e => { if(e.target.value){ tk.time = e.target.value; if(tk.day == null) tk.day = 0; tick(); drawTask() } };
+  $('tkSave').disabled = !$('tkText').value.trim();
+}
+function openTask(){ tk = {day:null, time:null}; $('tkText').value = ''; drawTask(); openSheet('sTask'); setTimeout(() => $('tkText').focus(), 350) }
+$('tkText').oninput = () => { $('tkSave').disabled = !$('tkText').value.trim() };
+$('tkSave').onclick = () => { const text = $('tkText').value.trim(); if(!text) return; let due = null, ht = 0;
+  if(tk.day != null){ const d = typeof tk.day === 'string' ? new Date(tk.day + 'T00:00') : new Date(dayStart(tk.day)*1000);
+    if(tk.time){ const [h, m] = tk.time.split(':').map(Number); d.setHours(h, m, 0, 0); ht = 1 } else d.setHours(10, 0, 0, 0);
+    due = Math.floor(d.getTime()/1000); if(ht && tk.day === 0 && due < Date.now()/1000) due += 86400 }
+  send(due ? {t:'task', text, due, ht} : {t:'task', text}, due ? 'Напомню ' + dueLabel(due, ht) + ' ⏰' : 'Записал 📝') };
+function openTaskAct(x){ const [id, text, due, ht, dn] = x, now = Date.now()/1000;
+  $('taHead').innerHTML = '<div class="ic" style="display:grid;place-items:center;font-size:44px">' + (dn ? '✅' : due && (ht ? due < now : due < dayStart(0)) ? '🔴' : '📝') + '</div><b>' + esc(text) + '</b><span>' + (dn ? 'сделано' : due ? '⏰ ' + dueLabel(due, ht) : 'без даты') + '</span>';
+  const tom = () => { const d = new Date(dayStart(1)*1000); if(ht && due){ const o = new Date(due*1000); d.setHours(o.getHours(), o.getMinutes()) } else d.setHours(10, 0); return Math.floor(d.getTime()/1000) };
+  $('taActs').innerHTML = '<button class="primary" data-a="done">' + (dn ? '↩️ Вернуть' : '✅ Готово') + '</button>' + (dn ? '' : '<button class="chip" data-a="h1">+1 час</button><button class="chip" data-a="tom">Завтра</button>');
+  $('taActs').querySelectorAll('button').forEach(b => b.onclick = () => { const a = b.dataset.a;
+    if(a === 'done') send({t:'taskdone', id, v:!dn}, dn ? 'Вернул в дела' : 'Готово! 💪');
+    if(a === 'h1') send({t:'taskmove', id, due:Math.floor(now + 3600), ht:1}, 'Напомню через час ⏰');
+    if(a === 'tom') send({t:'taskmove', id, due:tom(), ht:ht || !due ? 1 : 0}, 'Перенёс на завтра 🌅') });
+  $('taDel').className = 'danger'; $('taDel').textContent = 'Удалить'; let armed = false;
+  $('taDel').onclick = () => { if(!armed){ armed = true; haptic('rigid'); $('taDel').className = 'danger armed'; $('taDel').textContent = 'Нажми ещё раз, чтобы удалить'; return } send({t:'taskdel', id}, 'Удалено') };
+  openSheet('sTaskAct') }
+
+// ---------- цели ----------
+const GEMO = ['🎯','📱','💻','🚗','✈️','🏠','🎁','🛟','🎓','👟','🎮','💍'];
+const GRX = [[/айфон|iphone|телефон|смартфон|самсунг|xiaomi|пиксел/i,'📱'],[/машин|авто|тачк/i,'🚗'],[/отпуск|море|путешеств|поездк|отдых|билет/i,'✈️'],[/ноут|комп|macbook|видеокарт/i,'💻'],[/квартир|дом|ремонт|ипотек/i,'🏠'],[/подар|день рожд/i,'🎁'],[/подушк|резерв|запас/i,'🛟'],[/учеб|курс|универ/i,'🎓'],[/кроссов|одежд|куртк/i,'👟'],[/playstation|ps5|xbox|приставк|игр/i,'🎮'],[/кольц|свадьб/i,'💍']];
+let goalsDone = null;
+function confetti(){ const c = document.createElement('div'), cols = ['#9dfb8b','#ffd166','#7ad7ff','#ff8fb1','#c89bff','#ffffff'];
+  c.className = 'cf'; for(let i = 0; i < 80; i++){ const p = document.createElement('i');
+    p.style.cssText = 'left:' + (Math.random()*100) + '%;background:' + cols[i % cols.length] + ';--x:' + ((Math.random()-.5)*220) + 'px;--r:' + (Math.random()*900-450) + 'deg;animation-delay:' + (Math.random()*.35) + 's;animation-duration:' + (1.7+Math.random()*1.3) + 's;width:' + (6+Math.random()*6) + 'px;height:' + (8+Math.random()*9) + 'px';
+    c.appendChild(p) }
+  document.body.appendChild(c); try{ tg.HapticFeedback.notificationOccurred('success') }catch(e){} setTimeout(() => c.remove(), 3600) }
+function renderGoals(){
+  const G = D.goals || [];
+  $('gList').innerHTML = G.length ? G.map((g, i) => { const [id, name, emo, target, cur, dl, saved, done] = g, pct = Math.min(100, saved / target * 100), left = Math.max(0, target - saved), ok = done || left <= 0;
+      const right = ok ? '🎉 Готово!' : dl ? '~' + fmt(left / Math.max(1, Math.ceil((dl - Date.now()/1000) / 86400)), 0) + ' ' + cur + ' в день' : 'осталось ' + fmt(left, 0);
+      return '<button class="glass gl' + (ok ? ' dn' : '') + '" data-id="' + id + '" style="--i:' + i + '"><div class="gh"><span class="ge">' + emo + '</span><span class="gn"><b>' + esc(name) + '</b><span>' + (ok ? 'цель достигнута' : dl ? 'до ' + dueLabel(dl, 0) : 'без срока') + '</span></span><span class="gp n">' + fmt(pct, 0) + '%</span></div>'
+        + '<div class="gbar"><i data-w="' + pct + '"></i></div><div class="gs"><span><b class="n">' + fmt(saved) + '</b> из ' + fmt(target) + ' ' + cur + '</span><span>' + right + '</span></div></button>' }).join('')
+    : '<button class="glass gl gempty" id="gEmpty"><span class="ge">🐷</span><b>Поставь первую цель</b><span>Айфон, отпуск, подушка безопасности — посчитаю, сколько откладывать в день</span></button>';
+  requestAnimationFrame(() => requestAnimationFrame(() => $('gList').querySelectorAll('.gbar i').forEach(i => i.style.width = i.dataset.w + '%')));
+  $('gList').querySelectorAll('.gl[data-id]').forEach(b => b.onclick = () => openGoal(+b.dataset.id));
+  if($('gEmpty')) $('gEmpty').onclick = () => openGoalNew();
+  const nowDone = new Set(G.filter(g => g[7] || g[6] >= g[3]).map(g => g[0]));
+  if(goalsDone && [...nowDone].some(id => !goalsDone.has(id))) setTimeout(confetti, 350);
+  goalsDone = nowDone;
+}
+let gn = {emo:null, cur:'BYN', dl:null};
+function drawGoalNew(){
+  const name = $('gnName').value, auto = (GRX.find(([r]) => r.test(name)) || [0, '🎯'])[1], emo = gn.emo || auto;
+  $('gnEmo').textContent = emo;
+  $('gnEmos').innerHTML = GEMO.map(e => '<button class="chip ' + (e === emo ? 'on' : '') + '" data-e="' + e + '" style="font-size:18px;padding:0 12px">' + e + '</button>').join('');
+  $('gnEmos').querySelectorAll('.chip').forEach(b => b.onclick = () => { gn.emo = b.dataset.e; tick(); drawGoalNew() });
+  $('gnCurs').innerHTML = CURS().map(c => chip(c, emo_c(c), gn.cur)).join('');
+  $('gnCurs').querySelectorAll('.chip').forEach(b => b.onclick = () => { gn.cur = b.dataset.f; tick(); drawGoalNew() });
+  const opts = [['none','Без срока',null],['3','3 месяца',3],['6','Полгода',6],['12','Год',12]], custom = typeof gn.dl === 'string';
+  $('gnDl').innerHTML = opts.map(([k,l]) => '<button class="chip ' + ((gn.dl == null ? 'none' : String(gn.dl)) === k ? 'on' : '') + '" data-m="' + k + '">' + l + '</button>').join('')
+    + '<label class="chip tsel ' + (custom ? 'on' : '') + '">📅 ' + (custom ? new Date(gn.dl + 'T00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'}) : 'Дата') + '<input type="date" id="gnDate"></label>';
+  $('gnDl').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { gn.dl = b.dataset.m === 'none' ? null : +b.dataset.m; tick(); drawGoalNew() });
+  $('gnDate').onchange = e => { if(e.target.value){ gn.dl = e.target.value; tick(); drawGoalNew() } };
+  $('gnSave').disabled = !(name.trim() && parseFloat($('gnAmt').value.replace(',','.').replace(/\s/g,'')) > 0);
+}
+const emo_c = c => emo(c) + ' ' + c;
+function openGoalNew(){ gn = {emo:null, cur:B(), dl:null}; $('gnName').value = ''; $('gnAmt').value = ''; drawGoalNew(); openSheet('sGoalNew'); setTimeout(() => $('gnName').focus(), 350) }
+$('gnName').oninput = drawGoalNew; $('gnAmt').oninput = drawGoalNew; $('goalAdd').onclick = openGoalNew;
+$('gnSave').onclick = () => { const name = $('gnName').value.trim(), target = parseFloat($('gnAmt').value.replace(',','.').replace(/\s/g,'')); if(!name || !(target > 0)) return;
+  let dl = null; if(typeof gn.dl === 'string') dl = new Date(gn.dl + 'T12:00').getTime()/1000; else if(gn.dl){ const d = new Date(); d.setMonth(d.getMonth() + gn.dl); d.setHours(12,0,0,0); dl = d.getTime()/1000 }
+  send({t:'goal', name, target, c:gn.cur, deadline: dl ? Math.floor(dl) : null, emoji: gn.emo || (GRX.find(([r]) => r.test(name)) || [0, '🎯'])[1]}, 'Цель создана 🎯') };
+function openGoal(id){
+  const g = (D.goals || []).find(x => x[0] === id); if(!g) return;
+  const [, name, emo, target, cur, dl, saved, done] = g, left = Math.max(0, target - saved), pct = Math.min(100, saved / target * 100);
+  $('gHead').innerHTML = '<div class="ic" style="display:grid;place-items:center;font-size:46px">' + emo + '</div><b>' + esc(name) + '</b><div class="a n">' + fmt(saved) + ' <span style="display:inline;font-size:18px;color:var(--soft)">/ ' + fmt(target) + ' ' + cur + '</span></div>';
+  $('gBarI').style.width = '0'; requestAnimationFrame(() => requestAnimationFrame(() => $('gBarI').style.width = pct + '%'));
+  let per = ''; if(!done && left > 0 && dl){ const days = Math.max(1, Math.ceil((dl - Date.now()/1000) / 86400)); per = ' · <b>~' + fmt(left / days, 0) + ' ' + cur + '</b> в день, <b>~' + fmt(left / Math.max(1, days / 30.4), 0) + '</b> в месяц до ' + dueLabel(dl, 0) }
+  $('gSum').innerHTML = done || left <= 0 ? '🎉 Цель достигнута!' : 'Осталось <b>' + fmt(left) + ' ' + cur + '</b>' + per;
+  const nice = v => v >= 1000 ? Math.round(v / 100) * 100 : v >= 100 ? Math.round(v / 10) * 10 : Math.max(1, Math.round(v));
+  const q = [...new Set([target * .02, target * .05, target * .1, target * .25].map(nice))].filter(v => v < left || !left); if(left > 0) q.push(Math.round(left * 100) / 100);
+  $('gAmt').value = '';
+  $('gQuick').innerHTML = q.map((v, i) => '<button class="chip" data-v="' + v + '">' + (i === q.length - 1 && left > 0 ? 'Всё: ' : '') + fmt(v) + ' ' + cur + '</button>').join('');
+  $('gQuick').querySelectorAll('.chip').forEach(b => b.onclick = () => { $('gAmt').value = b.dataset.v; tick() });
+  const amt = () => parseFloat($('gAmt').value.replace(',','.').replace(/\s/g,''));
+  $('gIn').onclick = () => { const a = amt(); if(a > 0) send({t:'goaladd', id, a}, 'Отложил ' + fmt(a) + ' ' + cur + ' 🐷') };
+  $('gOut').onclick = () => { const a = amt(); if(a > 0) send({t:'goaladd', id, a:-a}, 'Взял ' + fmt(a) + ' ' + cur) };
+  $('gDel').className = 'danger'; $('gDel').textContent = 'Удалить цель'; let armed = false;
+  $('gDel').onclick = () => { if(!armed){ armed = true; haptic('rigid'); $('gDel').className = 'danger armed'; $('gDel').textContent = 'Нажми ещё раз — история взносов удалится'; return } send({t:'goaldel', id}, 'Цель удалена') };
+  openSheet('sGoal'); setTimeout(() => $('gAmt').focus(), 350);
+}
+function demoExtra(){
+  const n = new Date(), ts = (o, h, m) => { const d = new Date(n); d.setDate(d.getDate() + o); d.setHours(h, m || 0, 0, 0); return Math.floor(d.getTime()/1000) };
+  return { tasks: [[1,'Сделать пост в канал', ts(0, 18), 1, null], [2,'Сходить на WB за заказом', ts(0, 10), 0, null], [3,'Купить молоко, хлеб, яйца', null, 0, null],
+      [4,'Позвонить маме', ts(1, 12), 1, null], [5,'Оплатить интернет', ts(5, 10), 0, null], [6,'Скинуть отчёт', ts(-1, 15), 1, null], [7,'Забрать посылку', ts(0, 9), 1, ts(0, 9, 40)]],
+    goals: [[1,'Айфон 17','📱',3000,'BYN',ts(120,12),1240,null,ts(-30,12)], [2,'Отпуск на море','✈️',2500,'BYN',null,600,null,ts(-10,12)], [3,'Подушка безопасности','🛟',1000,'BYN',null,1000,ts(-2,12),ts(-60,12)]] };
+}
+
+window.RENDER = {home:renderHome, hist:renderHist, stats:renderStats, set:renderSet, wallet:function(){ renderWallet(); renderGoals(); renderDebts() }, tasks:renderTasks};
 
 function go(v){
   document.querySelectorAll('.view').forEach(x => x.classList.toggle('on', x.id === 'v-'+v));
@@ -790,7 +1005,7 @@ $('pad').querySelectorAll('button').forEach(b => b.onclick = () => { const k = b
 $('kind').querySelectorAll('button').forEach(b => b.onclick = () => { st.kind = b.dataset.k; st.cat = null; tick(); drawAdd() });
 $('desc').onkeydown = e => { if(e.key === 'Enter') e.target.blur() };
 function openAdd(k, c){ st = {kind:k||'exp', amt:'', cur:c||B(), cat:null}; $('desc').value = ''; drawAdd(); openSheet('sAdd') }
-$('plus').onclick = () => openAdd();
+$('plus').onclick = () => { const v = document.querySelector('.view.on'); if(v && v.id === 'v-tasks') openTask(); else openAdd() };
 $('save').onclick = () => { const a = parseFloat(st.amt); if(a > 0) send({t:'add', a, c:st.cur, d:$('desc').value.trim(), cat:st.cat, inc: st.kind==='inc'}, (st.kind==='inc'?'Доход':'Трата') + ' сохранена: ' + fmt(a,4) + ' ' + st.cur) };
 document.addEventListener('keydown', e => { if(opened !== $('sAdd') || document.activeElement === $('desc')) return;
   if(/^[0-9]$/.test(e.key)) $('pad').querySelector('[data-k="' + e.key + '"]').click();
