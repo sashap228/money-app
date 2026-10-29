@@ -163,8 +163,10 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
 .wcard .wa button.main{background:var(--ink);color:#0b0f0c}
 .wcard.by .wa button{background:rgba(6,33,9,.12);color:var(--gink)}
 .wcard.by .wa button.main{background:#0b120c;color:var(--ink)}
+.tx .ic{background:none;border:0}.tx .ic .ai,.txh .ic .ai,.wi .ai{width:100%;height:100%;font-size:inherit}.txh .ic{width:68px;height:68px;margin:0 auto 6px}.wi{display:block;width:42px;height:42px}.chip .ai,.crow .ai{width:22px;height:22px;border-radius:7px;vertical-align:middle}.crow .ai{margin-right:4px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<script src="icons.js"></script>
 </head>
 <body>
 <div class="app">
@@ -330,7 +332,7 @@ if(!D){ D = demo(); if(inTg){ document.body.style.visibility = 'hidden'; setTime
 const PAL = ['#9dfb8b','#5fd36f','#d4ff6a','#38e0b0','#7ad7ff','#ffd166','#ff9f6b','#c89bff','#ff8fb1','#a7f3d0','#e4ff9b','#6ee7b7','#fca5a5','#93a093'];
 const fmt = (x, d=2) => Number(x).toLocaleString('ru-RU',{maximumFractionDigits:d});
 const money = x => { const s = fmt(Math.abs(x)), k = s.indexOf(','); return k < 0 ? s : s.slice(0,k) + '<i>' + s.slice(k) + '</i>' };
-const emo = c => c.split(' ')[0], nm = c => c.split(' ').slice(1).join(' ');
+const emo = c => window.ICON ? ICON(c) : c.split(' ')[0], nm = c => c.split(' ').slice(1).join(' ');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rate = () => (D.gram && D.usd) ? (+D.gram) * (+D.usd) : null;
 const [Y, MO] = D.m.split('-').map(Number);
@@ -371,7 +373,7 @@ function renderHome(){
   else $('forecast').textContent = '';
 
   const used = [...new Set(D.rec.map(r => r[4]))];
-  $('homeChips').innerHTML = chip('all', 'Все', homeCat) + used.map(x => chip(x, x, homeCat)).join('');
+  $('homeChips').innerHTML = chip('all', 'Все', homeCat) + used.map(x => chip(x, emo(x) + ' ' + nm(x), homeCat)).join('');
   $('homeChips').querySelectorAll('.chip').forEach(b => b.onclick = () => { homeCat = b.dataset.f; tick(); renderHome() });
   const rows = D.rec.filter(r => homeCat === 'all' || r[4] === homeCat).slice(0, 6);
   $('recent').innerHTML = rows.length ? listHTML(rows, false) : '<div class="empty">Пока ни одной записи<div class="cta"><button class="primary" onclick="openAdd()">Добавить первую трату</button></div></div>';
@@ -394,8 +396,8 @@ function bindTx(root){ root.querySelectorAll('.tx').forEach(el => el.onclick = (
 
 let hf = 'all';
 function renderHist(){
-  const opts = [['all','Все'],['exp','Расходы'],['inc','Доходы'],['crypto','💎 Крипта']], used = [...new Set(D.rec.map(r => r[4]))];
-  $('filters').innerHTML = opts.map(([k,l]) => chip(k, l, hf)).join('') + used.map(c => chip(c, c, hf)).join('');
+  const opts = [['all','Все'],['exp','Расходы'],['inc','Доходы'],['crypto', emo('GRAM') + ' Крипта']], used = [...new Set(D.rec.map(r => r[4]))];
+  $('filters').innerHTML = opts.map(([k,l]) => chip(k, l, hf)).join('') + used.map(c => chip(c, emo(c) + ' ' + nm(c), hf)).join('');
   $('filters').querySelectorAll('.chip').forEach(b => b.onclick = () => { hf = b.dataset.f; tick(); renderHist() });
   const q = $('q').value.trim().toLowerCase();
   const rows = D.rec.filter(r => (hf==='all' || (hf==='exp'&&r[2]==='exp') || (hf==='inc'&&r[2]==='inc') || (hf==='crypto'&&r[6]!=='BYN') || r[4]===hf)
@@ -413,7 +415,7 @@ function renderStats(){
     const s = '<circle cx="100" cy="100" r="' + R + '" fill="none" stroke="' + catColor[c] + '" stroke-width="22" stroke-linecap="round" stroke-dasharray="' + Math.max(.1,len-gap) + ' ' + C + '" stroke-dashoffset="' + (-off-gap/2) + '"/>';
     off += len; return s }).join('');
   $('donutSum').textContent = fmt(D.sp, 0) + ' BYN';
-  $('allCats').innerHTML = cats.length ? cats.map(([c,v]) => '<div class="crow"><div class="t"><span>' + c + '<em>' + fmt(v/D.sp*100,0) + '%</em></span><span class="n">' + fmt(v) + '</span></div><div class="bar"><i style="background:' + catColor[c] + '" data-w="' + (v/cats[0][1]*100) + '"></i></div></div>').join('')
+  $('allCats').innerHTML = cats.length ? cats.map(([c,v]) => '<div class="crow"><div class="t"><span>' + emo(c) + ' ' + nm(c) + '<em>' + fmt(v/D.sp*100,0) + '%</em></span><span class="n">' + fmt(v) + '</span></div><div class="bar"><i style="background:' + catColor[c] + '" data-w="' + (v/cats[0][1]*100) + '"></i></div></div>').join('')
     : '<div class="empty">Добавь пару трат, и здесь появится разбивка</div>';
   requestAnimationFrame(() => document.querySelectorAll('.crow .bar i').forEach(i => i.style.width = i.dataset.w + '%'));
   const vals = Array.from({length:DIM}, (_,i) => D.day[i+1] || 0), norm = D.lim / DIM, max = Math.max(norm * 1.6, ...vals) || 1;
@@ -440,7 +442,7 @@ function renderSet(){
 }
 $('limSave').onclick = () => { const v = parseFloat($('limIn').value.replace(',','.')); if(v > 0) send({t:'limit', v}, 'Лимит ' + fmt(v,0) + ' BYN сохранён') };
 
-const WALLETS = [{k:'cr', c:'GRAM', t:'Крипта', e:'💎', sym:'GRAM'}, {k:'by', c:'BYN', t:'Белорусские рубли', e:'🇧🇾', sym:'Br'}, {k:'ru', c:'RUB', t:'Российские рубли', e:'🇷🇺', sym:'₽'}];
+const WALLETS = [{k:'cr', c:'GRAM', t:'Крипта', e:'GRAM', sym:'GRAM'}, {k:'by', c:'BYN', t:'Белорусские рубли', e:'BYN', sym:'Br'}, {k:'ru', c:'RUB', t:'Российские рубли', e:'RUB', sym:'₽'}];
 const inByn = (v, c) => c==='BYN' ? v : c==='RUB' ? (D.rub ? v * D.rub : null) : c==='GRAM' ? (rate() ? v * rate() : null) : (c==='USDT' || c==='USD') && D.usd ? v * D.usd : null;
 function renderWallet(){
   const w = D.w || {}, last = D.last || {}; let total = 0, all = true;
@@ -450,7 +452,7 @@ function renderWallet(){
     const v = w[x.c] || 0, b = inByn(v, x.c); let sub = x.c !== 'BYN' && b != null ? '≈ ' + fmt(b) + ' BYN' : '';
     if(x.c === 'GRAM' && w.USDT) sub += (sub ? ' · ' : '') + '+ ' + fmt(w.USDT) + ' USDT';
     const li = last[x.c] ? 'Последнее поступление: ' + new Date(last[x.c]*1000).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}) : 'Поступлений пока не было';
-    return '<div class="wcard ' + x.k + '"><div class="wt"><span>' + x.t + '</span><span>' + x.e + '</span></div><div class="wb n">' + (v < 0 ? '−' : '') + money(v) + '<small>' + x.sym + '</small></div>'
+    return '<div class="wcard ' + x.k + '"><div class="wt"><span>' + x.t + '</span><span class="wi">' + emo(x.e) + '</span></div><div class="wb n">' + (v < 0 ? '−' : '') + money(v) + '<small>' + x.sym + '</small></div>'
       + '<div class="ws">' + (sub ? sub + '<br>' : '') + li + '</div><div class="wa"><button class="main" data-inc="' + x.c + '">+ Доход</button><button data-bal="' + x.c + '">Поправить</button></div></div>' }).join('');
   $('wCards').querySelectorAll('[data-inc]').forEach(b => b.onclick = () => openAdd('inc', b.dataset.inc));
   $('wCards').querySelectorAll('[data-bal]').forEach(b => b.onclick = () => openBal(b.dataset.bal));
@@ -488,14 +490,14 @@ function drawAdd(){
   $('amt').textContent = (st.amt || '0').replace('.', ',') + ' ' + st.cur; $('amt').classList.toggle('zero', !st.amt);
   const n = parseFloat(st.amt), r = st.cur==='BYN' ? 1 : st.cur==='GRAM' ? rate() : st.cur==='RUB' ? (D.rub ? +D.rub : null) : D.usd ? +D.usd : null;
   $('eq').textContent = st.cur === 'BYN' ? '' : n > 0 && r ? '≈ ' + fmt(n*r) + ' BYN' : 'бот пересчитает в BYN по курсу';
-  $('curs').innerHTML = CURS.map(c => chip(c, c === 'GRAM' ? '💎 GRAM' : c === 'RUB' ? '₽ RUB' : c, st.cur)).join('');
+  $('curs').innerHTML = CURS.map(c => chip(c, (c === 'GRAM' || c === 'RUB' || c === 'BYN') ? emo(c) + ' ' + c : c, st.cur)).join('');
   $('curs').querySelectorAll('.chip').forEach(b => b.onclick = () => { st.cur = b.dataset.f; tick(); drawAdd() });
   $('quick').innerHTML = QUICK[st.cur].map(q => '<button class="chip" data-q="' + q + '">' + q + ' ' + st.cur + '</button>').join('');
   $('quick').querySelectorAll('.chip').forEach(b => b.onclick = () => { st.amt = b.dataset.q; tick(); drawAdd() });
   $('sugg').innerHTML = suggestions().map(r => '<button class="chip" data-d="' + esc(r[3]) + '" data-c="' + esc(r[4]) + '" data-a="' + (r[6]==='BYN'?r[5]:'') + '">' + emo(r[4]) + ' ' + esc(r[3]) + '</button>').join('');
   $('sugg').querySelectorAll('.chip').forEach(b => b.onclick = () => { $('desc').value = b.dataset.d; st.cat = b.dataset.c; if(!st.amt && b.dataset.a) st.amt = b.dataset.a; tick(); drawAdd() });
   const list = st.kind==='inc' ? D.ic : D.ec;
-  $('cats').innerHTML = list.map(c => chip(c, c, st.cat)).join('');
+  $('cats').innerHTML = list.map(c => chip(c, emo(c) + ' ' + nm(c), st.cat)).join('');
   $('cats').querySelectorAll('.chip').forEach(b => b.onclick = () => { st.cat = st.cat===b.dataset.f ? null : b.dataset.f; tick(); drawAdd() });
   $('save').disabled = !(n > 0); $('save').textContent = n > 0 ? (st.kind==='inc' ? 'Сохранить доход' : 'Сохранить трату') : 'Введи сумму';
 }
@@ -520,7 +522,7 @@ function openTx(r){ if(!r) return; cur = r; armed = false; const [id,ts,k,ds,c,a
   $('txHead').innerHTML = '<div class="ic">' + emo(c) + '</div><b>' + esc(ds) + '</b><div class="a n" style="color:' + (k==='inc'?'var(--g1)':'var(--ink)') + '">' + (k==='inc'?'+':'−') + (cu==='BYN' ? fmt(b) + ' BYN' : fmt(a,4) + ' ' + cu) + '</div><span>'
     + (cu!=='BYN' ? '≈ ' + fmt(b) + ' BYN · ' : '') + new Date(ts*1000).toLocaleString('ru-RU',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}) + '</span>';
   const list = k==='inc' ? D.ic : D.ec;
-  $('txCats').innerHTML = list.map(x => chip(x, x, c)).join('');
+  $('txCats').innerHTML = list.map(x => chip(x, emo(x) + ' ' + nm(x), c)).join('');
   $('txCats').querySelectorAll('.chip').forEach(btn => btn.onclick = () => { if(btn.dataset.f !== c) send({t:'cat', id, cat:btn.dataset.f}, 'Перенёс в «' + nm(btn.dataset.f) + '»') });
   $('txDel').className = 'danger'; $('txDel').textContent = 'Удалить запись'; openSheet('sTx') }
 $('txDel').onclick = () => { if(!armed){ armed = true; haptic('rigid'); $('txDel').className = 'danger armed'; $('txDel').textContent = 'Нажми ещё раз, чтобы удалить'; return }
