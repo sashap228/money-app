@@ -317,7 +317,7 @@ h2 button{font:500 14px var(--body);color:var(--cool)}
 
 <script>
 const tg = window.Telegram && window.Telegram.WebApp;
-const inTg = !!(tg && tg.initData);
+const inTg = !!(tg && tg.platform && tg.platform !== 'unknown');
 const $ = id => document.getElementById(id);
 const haptic = (t='light') => { try{ tg.HapticFeedback.impactOccurred(t) }catch(e){} };
 const tick = () => { try{ tg.HapticFeedback.selectionChanged() }catch(e){} };
@@ -573,7 +573,7 @@ function send(obj, doneText){
   haptic('medium');
   if(inTg){ try{ tg.HapticFeedback.notificationOccurred('success'); tg.sendData(JSON.stringify(obj)); return }catch(e){} }
   closeSheet();
-  alert((doneText || 'Готово') + '\n\nЭто демо: в настоящем мини-аппе запись уйдёт в бота.');
+  alert(inTg ? 'Чтобы сохранить, открой мини-апп кнопкой «📊 Мои финансы» внизу чата с ботом.' : (doneText || 'Готово') + '\n\nЭто демо: в настоящем мини-аппе запись уйдёт в бота.');
 }
 
 /* ---------- добавление ---------- */
