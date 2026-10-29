@@ -369,7 +369,7 @@ function demo(){
     ic:["💼 Зарплата","📢 Реклама и каналы","🪙 Крипта","🎁 Подарок","💰 Другой доход"]};
 }
 let D = decode();
-if(!D){ D = demo(); $('demo').hidden = false }
+if(!D){ D = demo(); if(inTg){ document.body.style.visibility = 'hidden'; setTimeout(function(){ document.body.style.visibility = '' }, 15000) } else $('demo').hidden = false }
 
 /* ---------- помощники ---------- */
 const PALETTE = ['#ffd23f','#7aa2ff','#ff8fab','#56e39f','#c49bff','#ff9f43','#4dd4e8','#f7f06d','#ff6b6b','#9fb4c7','#b8e986','#ffb3d9','#6ee7d8','#8c90b8'];
@@ -651,5 +651,6 @@ $('txDel').onclick = () => {
 
 renderHome();
 </script>
+<script src="live.js"></script>
 </body>
 </html>
