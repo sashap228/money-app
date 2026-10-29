@@ -64,7 +64,22 @@
       '<text x="12" y="15.4" text-anchor="middle" class="tx">Br</text></g>'],
     'RUB': ['#ddd6fe', '#6d28d9',
       '<g class="coin"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="6.2" opacity=".45"/>' +
-      '<path d="M10 16.7V7.6h3a2.3 2.3 0 0 1 0 4.6h-4.4M8.6 14.5h4.4"/></g>']
+      '<path d="M10 16.7V7.6h3a2.3 2.3 0 0 1 0 4.6h-4.4M8.6 14.5h4.4"/></g>'],
+    'USD': ['#d9f99d', '#4d7c0f',
+      '<g class="coin"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="6.2" opacity=".45"/>' +
+      '<text x="12" y="15.4" text-anchor="middle" class="tx" style="font-size:9px">$</text></g>'],
+    'EUR': ['#bfdbfe', '#1d4ed8',
+      '<g class="coin"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="6.2" opacity=".45"/>' +
+      '<text x="12" y="15.4" text-anchor="middle" class="tx" style="font-size:9px">€</text></g>'],
+    'UAH': ['#fde68a', '#b45309',
+      '<g class="coin"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="6.2" opacity=".45"/>' +
+      '<text x="12" y="15.4" text-anchor="middle" class="tx" style="font-size:9px">₴</text></g>'],
+    'KZT': ['#a5f3fc', '#0e7490',
+      '<g class="coin"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="6.2" opacity=".45"/>' +
+      '<text x="12" y="15.4" text-anchor="middle" class="tx" style="font-size:9px">₸</text></g>'],
+    'PLN': ['#fecaca', '#b91c1c',
+      '<g class="coin"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="6.2" opacity=".45"/>' +
+      '<text x="12" y="15.4" text-anchor="middle" class="tx">zł</text></g>']
   };
 
   var css =
