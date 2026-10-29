@@ -4,7 +4,7 @@
   var initData = (tg && tg.initData) || '';
   var hp = new URLSearchParams(location.hash.slice(1));
   var hasHashData = !!hp.get('d');
-  var api = hp.get('api') || '';
+  var api = hp.get('api') || 'https://moneyday.auc9157.workers.dev';
   var live = false;
 
   function reveal(){ document.body.style.visibility = '' }
