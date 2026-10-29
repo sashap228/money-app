@@ -28,7 +28,7 @@
     $('demo').hidden = true;
     var v = currentView();
     document.querySelectorAll('.view').forEach(function(x){ x.classList.toggle('on', x.id === 'v-' + v) });
-    ({home:renderHome, hist:renderHist, stats:renderStats, set:renderSet})[v]();
+    window.RENDER[v]();
     reveal();
   }
 
