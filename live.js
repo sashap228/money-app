@@ -51,9 +51,9 @@
     document.querySelector('.nav').style.display = 'none';
     document.querySelector('.app').innerHTML =
       '<div style="min-height:80vh;display:grid;place-items:center;text-align:center;padding:0 12px">' +
-      '<div><div style="font-size:56px">😴</div>' +
-      '<h2 style="justify-content:center;font-size:22px;margin:14px 0 8px">Бот сейчас спит</h2>' +
-      '<p style="color:var(--soft);font-size:15px;max-width:300px;margin:0 auto">Запусти MoneyBot на компьютере, потом открой мини-апп кнопкой «Финансы» в чате с ботом.</p>' +
+      '<div><div style="font-size:56px">📡</div>' +
+      '<h2 style="justify-content:center;font-size:22px;margin:14px 0 8px">Не получилось загрузить</h2>' +
+      '<p style="color:var(--soft);font-size:15px;max-width:300px;margin:0 auto">Проверь интернет и попробуй ещё раз. Если не помогло — открой мини-апп кнопкой «Финансы» в чате с ботом.</p>' +
       '<button class="primary" style="margin-top:22px;max-width:300px" id="tryAgain">Попробовать снова</button></div></div>';
     $('tryAgain').onclick = function(){ location.reload() };
   }
@@ -79,7 +79,7 @@
       closeSheet(); apply(d); toast(doneText || 'Готово');
     }).catch(function(){
       try{ tg.HapticFeedback.notificationOccurred('error') }catch(e){}
-      toast('Не сохранилось: бот на компьютере выключен');
+      toast('Не сохранилось, проверь интернет');
     }).then(function(){ if(btn) btn.disabled = false });
   };
 
