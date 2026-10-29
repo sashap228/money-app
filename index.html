@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Мои финансы</title>
+<script>try{var t=localStorage.getItem("theme");if(t==="ocean")document.documentElement.dataset.theme=t}catch(e){}</script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,7 +88,8 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
 .donut svg{width:230px;height:230px;transform:rotate(-90deg);filter:drop-shadow(0 0 24px rgba(95,211,111,.25))}
 .donut .mid{position:absolute;text-align:center}.donut .mid span{font-size:12px;color:var(--soft)}.donut .mid b{display:block;font-size:30px;font-weight:800;letter-spacing:-.03em}
 .crow{padding:9px 4px}
-.crow .t{display:flex;justify-content:space-between;font-size:14px;font-weight:600}.crow .t em{font-style:normal;color:var(--soft);font-weight:500;margin-left:6px}
+.crow .t{width:auto;height:auto;border-radius:0;color:var(--ink);display:flex;justify-content:space-between;font-size:14px;font-weight:600}.crow .t em{font-style:normal;color:var(--soft);font-weight:500;margin-left:6px}
+.crow .t:active{transform:none}
 .crow .bar{height:6px;border-radius:9px;background:rgba(255,255,255,.05);margin-top:7px;overflow:hidden}.crow .bar i{display:block;height:100%;border-radius:9px;width:0;transition:width .8s}
 .bars{height:150px;padding:16px 14px 30px;display:flex;align-items:flex-end;gap:3px;position:relative}
 .bars .b{flex:1;border-radius:4px;min-height:3px;background:rgba(157,251,139,.3)}
@@ -172,6 +174,56 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
 .tx .ic .av{font-size:18px;line-height:1}.txh .ic .av{font-size:28px;line-height:1;color:#fff}.tx .a.neg{color:var(--red)}
 .pacts{display:flex;gap:8px;margin-top:12px}.pacts button{flex:1;height:52px;font-size:15px}.pacts .chip{justify-content:center;font-size:14px;font-weight:700;color:var(--ink)}
 .dx{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.06);color:var(--soft);font-size:15px;flex:none}
+.thm{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.thm button{padding:8px 8px 12px;border-radius:22px;border:1.5px solid var(--line);font-weight:700;font-size:14px;display:flex;flex-direction:column;gap:10px;color:var(--soft);transition:border-color .2s,box-shadow .2s,color .2s}
+.thm button.on{border-color:var(--g1);color:var(--ink);box-shadow:0 0 0 4px rgba(157,251,139,.12)}
+.sw{position:relative;display:block;height:84px;border-radius:15px;overflow:hidden}
+.sw i,.sw b,.sw em{position:absolute;display:block}
+.sw i{left:10px;right:10px;top:12px;height:30px;border-radius:9px}.sw b{left:10px;width:46%;bottom:12px;height:20px;border-radius:7px}.sw em{right:10px;bottom:10px;width:24px;height:24px;border-radius:50%}
+.sw.neon{background:radial-gradient(90% 70% at 50% -10%,rgba(95,211,111,.45),transparent 70%),#070a08}
+.sw.neon i{background:linear-gradient(120deg,#c6ffb8,#9dfb8b 40%,#5fd36f)}.sw.neon b{background:rgba(255,255,255,.1)}.sw.neon em{background:#9dfb8b}
+.sw.ocean{background:linear-gradient(180deg,#eef5fd,#b9d3f0 60%,#5a82bb)}
+.sw.ocean i{background:linear-gradient(120deg,#7fb0ec,#2c5fa8 55%,#0e2b59)}.sw.ocean b{background:#123565}.sw.ocean em{background:radial-gradient(circle at 30% 25%,#e6f3ff,#8fc4ff 45%,#4f8fe6)}
+
+/* ---------- тема «Океан» ---------- */
+html[data-theme=ocean]{--bg:#c9ddf3;--ink:#0d2140;--soft:#4b6489;--faint:#8095b5;--line:rgba(13,33,64,.1);--g1:#8fc4ff;--g2:#4f8fe6;--gink:#06203f;--red:#ff7b7b;
+  --glass:linear-gradient(160deg,#1f4886,#0e2b59)}
+html[data-theme=ocean] body{background:radial-gradient(70% 32% at 88% -2%,rgba(255,255,255,.9),transparent 70%),radial-gradient(130% 42% at 50% 115%,#173a72 0%,rgba(23,58,114,.5) 45%,transparent 75%),linear-gradient(180deg,#eaf3fc 0%,#d0e2f6 45%,#a8c5ea 100%);background-attachment:fixed}
+html[data-theme=ocean] :is(.glass,.chip,.sheet,.bar4,.hero,.wcard,.tile,.pad button){--ink:#f2f7ff;--soft:#a9bfdf;--faint:#7590b8;--line:rgba(255,255,255,.11)}
+html[data-theme=ocean] :is(.glass,.sheet,.wcard){color:var(--ink)}
+html[data-theme=ocean] :is(.glass,.sheet) :is(.glass,.chip,.pad button){--glass:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03))}
+html[data-theme=ocean] .glass{box-shadow:0 18px 40px -24px rgba(13,40,90,.6),inset 0 1px 0 rgba(255,255,255,.12)}
+html[data-theme=ocean] :is(.glass,.sheet) .glass{box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+html[data-theme=ocean] .demo{background:rgba(255,209,102,.35);border-color:rgba(160,110,0,.25);color:#6b4800}
+html[data-theme=ocean] .ava{box-shadow:0 0 0 3px rgba(79,143,230,.2)}
+html[data-theme=ocean] h2 button{color:#1d5fc4}
+html[data-theme=ocean] .fc .good{color:#1d6fd6}html[data-theme=ocean] .fc .bad{color:#d94848}
+html[data-theme=ocean] .hero{color:#fff;background:radial-gradient(90% 90% at 15% 0%,#86b6ef 0%,#3d72c1 36%,#17397a 72%,#0d2654 100%);box-shadow:0 26px 50px -24px rgba(13,40,90,.75),inset 0 1px 0 rgba(255,255,255,.35)}
+html[data-theme=ocean] .hero.over{background:radial-gradient(90% 90% at 15% 0%,#ffb8b8,#e46a6a 45%,#982f47)}
+html[data-theme=ocean] .hero:after{background:radial-gradient(circle,rgba(255,255,255,.28),transparent 65%)}
+html[data-theme=ocean] .hero .tile{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+html[data-theme=ocean] .tile .ic{background:rgba(143,196,255,.2);color:#cfe7ff}html[data-theme=ocean] .tile .ic.out{background:rgba(255,123,123,.18);color:#ffb0b0}
+html[data-theme=ocean] .limitbar .tr{background:rgba(255,255,255,.16)}html[data-theme=ocean] .limitbar .tr i{background:linear-gradient(90deg,#bfe0ff,#fff)}
+html[data-theme=ocean] .c.l1{background:rgba(143,196,255,.2);color:#cfe7ff}html[data-theme=ocean] .c.l2{background:rgba(143,196,255,.46);color:#fff}
+html[data-theme=ocean] .c.t{box-shadow:0 0 0 2px #15356b,0 0 0 3.5px #fff}
+html[data-theme=ocean] .leg i:nth-of-type(1){background:rgba(143,196,255,.2)!important}html[data-theme=ocean] .leg i:nth-of-type(2){background:rgba(143,196,255,.46)!important}
+html[data-theme=ocean] .chip.on{box-shadow:0 6px 20px -6px rgba(143,196,255,.7)}
+html[data-theme=ocean] .bars .b{background:rgba(143,196,255,.35)}html[data-theme=ocean] .bars .b.hi{background:var(--g1)}html[data-theme=ocean] .bars .b.ov{background:var(--red)}html[data-theme=ocean] .bars .b.fu{background:rgba(255,255,255,.06)}
+html[data-theme=ocean] .donut svg{filter:drop-shadow(0 0 24px rgba(79,143,230,.4))}
+html[data-theme=ocean] .howto code{background:rgba(143,196,255,.14);color:#cfe7ff}
+html[data-theme=ocean] .primary{box-shadow:0 10px 30px -10px rgba(79,143,230,.8)}
+html[data-theme=ocean] .pad button:active{background:rgba(143,196,255,.16)}
+html[data-theme=ocean] .bar4{background:rgba(14,38,78,.84);border-color:rgba(255,255,255,.12);box-shadow:0 14px 40px rgba(13,40,90,.45)}
+html[data-theme=ocean] .t.on{box-shadow:0 0 20px rgba(143,196,255,.5)}
+html[data-theme=ocean] .plus{background:radial-gradient(circle at 30% 25%,#e6f3ff,var(--g1) 45%,var(--g2));box-shadow:0 10px 30px -6px rgba(79,143,230,.75),inset 0 1px 0 rgba(255,255,255,.6);animation-name:m-breathe-o}
+@keyframes m-breathe-o{0%,100%{box-shadow:0 10px 30px -6px rgba(79,143,230,.6),inset 0 1px 0 rgba(255,255,255,.6)}50%{box-shadow:0 10px 38px -2px rgba(79,143,230,.9),inset 0 1px 0 rgba(255,255,255,.6)}}
+html[data-theme=ocean] .scrim{background:rgba(8,22,48,.55)}
+html[data-theme=ocean] .sheet{background:radial-gradient(80% 40% at 50% 0%,rgba(111,168,236,.32),transparent 70%),#0e2550}
+html[data-theme=ocean] .wcard.cr{background:radial-gradient(120% 140% at 100% 0%,rgba(122,215,255,.35),transparent 55%),linear-gradient(150deg,#14406b,#0b1f3d);border-color:rgba(122,215,255,.2)}
+html[data-theme=ocean] .wcard.ru{background:radial-gradient(120% 140% at 100% 0%,rgba(200,155,255,.35),transparent 55%),linear-gradient(150deg,#2a2360,#121236)}
+html[data-theme=ocean] .wcard.by{--ink:#0b2547;--soft:#2d4d78;background:radial-gradient(120% 120% at 0% 0%,#e6f3ff,#a9d1ff 40%,#6ea7ec);box-shadow:0 20px 50px -24px rgba(40,90,170,.75)}
+html[data-theme=ocean] .wcard.by .wa button{background:rgba(11,37,71,.1);color:#0b2547}html[data-theme=ocean] .wcard.by .wa button.main{background:#0b2547;color:#fff}
+html[data-theme=ocean] .thm button.on{box-shadow:0 0 0 4px rgba(143,196,255,.16)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <script src="icons.js"></script>
@@ -238,6 +290,14 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
 
   <main class="view" id="v-set">
     <h1>Настройки</h1>
+    <div class="glass card">
+      <h3>Оформление</h3>
+      <p>Тема запомнится на всех твоих устройствах</p>
+      <div class="thm" id="themes">
+        <button data-t="neon"><span class="sw neon"><i></i><b></b><em></em></span>Неон</button>
+        <button data-t="ocean"><span class="sw ocean"><i></i><b></b><em></em></span>Океан</button>
+      </div>
+    </div>
     <div class="glass card">
       <h3>Лимит на месяц</h3>
       <p>Бот напомнит, когда потратишь 50%, 80% и весь лимит.</p>
@@ -360,7 +420,11 @@ function demo(){
 let D = decode();
 if(!D){ D = demo(); if(inTg){ document.body.style.visibility = 'hidden'; setTimeout(function(){ document.body.style.visibility = '' }, 15000) } else $('demo').hidden = false }
 
-const PAL = ['#9dfb8b','#5fd36f','#d4ff6a','#38e0b0','#7ad7ff','#ffd166','#ff9f6b','#c89bff','#ff8fb1','#a7f3d0','#e4ff9b','#6ee7b7','#fca5a5','#93a093'];
+const THEMES = {
+  neon: {bg:'#070a08', head:'#070a08', pal:['#9dfb8b','#5fd36f','#d4ff6a','#38e0b0','#7ad7ff','#ffd166','#ff9f6b','#c89bff','#ff8fb1','#a7f3d0','#e4ff9b','#6ee7b7','#fca5a5','#93a093']},
+  ocean: {bg:'#c9ddf3', head:'#eaf3fc', pal:['#8fc4ff','#4f8fe6','#c3e3ff','#5ad1e6','#7b9cff','#ffd166','#ff9f6b','#c89bff','#ff8fb1','#7fe0d0','#a5b8ff','#6ec3ff','#fca5a5','#9fb3cf']}};
+let THEME = document.documentElement.dataset.theme === 'ocean' ? 'ocean' : 'neon';
+const PAL = THEMES[THEME].pal.slice();
 const fmt = (x, d=2) => Number(x).toLocaleString('ru-RU',{maximumFractionDigits:d});
 const money = x => { const s = fmt(Math.abs(x)), k = s.indexOf(','); return k < 0 ? s : s.slice(0,k) + '<i>' + s.slice(k) + '</i>' };
 const emo = c => window.ICON ? ICON(c) : c.split(' ')[0], nm = c => c.split(' ').slice(1).join(' ');
@@ -370,6 +434,18 @@ const [Y, MO] = D.m.split('-').map(Number);
 const DIM = new Date(Y, MO, 0).getDate(), NOW = new Date();
 const IS_CUR = NOW.getFullYear()===Y && NOW.getMonth()+1===MO, TODAY = IS_CUR ? NOW.getDate() : DIM;
 const catColor = {}; [...D.ec, ...D.ic].forEach((c,i) => catColor[c] = PAL[i % PAL.length]);
+function setTheme(t, save){
+  THEME = THEMES[t] ? t : 'neon';
+  if(THEME === 'ocean') document.documentElement.dataset.theme = 'ocean'; else delete document.documentElement.dataset.theme;
+  PAL.splice(0, PAL.length, ...THEMES[THEME].pal); Object.keys(catColor).forEach((c,i) => catColor[c] = PAL[i % PAL.length]);
+  try{ tg.setHeaderColor(THEMES[THEME].head); tg.setBackgroundColor(THEMES[THEME].bg) }catch(e){}
+  if($('themes')) $('themes').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.t === THEME));
+  if(save){ try{ localStorage.setItem('theme', THEME) }catch(e){} try{ tg.CloudStorage.setItem('theme', THEME) }catch(e){} }
+}
+setTheme(THEME);
+$('themes').querySelectorAll('button').forEach(b => b.onclick = () => { if(b.dataset.t !== THEME){ haptic(); setTheme(b.dataset.t, true) } });
+try{ if(inTg) tg.CloudStorage.getItem('theme', (e, v) => { if(!e && v && v !== THEME){ setTheme(v); try{ localStorage.setItem('theme', THEME) }catch(_){}
+  const cur = document.querySelector('.view.on'); if(cur && window.RENDER) window.RENDER[cur.id.slice(2)]() } }) }catch(e){}
 let homeCat = 'all';
 const chip = (f, label, cur) => '<button class="chip ' + (cur === f ? 'on' : '') + '" data-f="' + esc(f) + '">' + label + '</button>';
 
