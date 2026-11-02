@@ -68,6 +68,11 @@ h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:6px 2px 16px}
 .leg span:last-child{display:flex;gap:4px;align-items:center}.leg i{width:10px;height:10px;border-radius:3px;display:block}
 .chips{display:flex;gap:8px;overflow-x:auto;margin:0 -16px 12px;padding:2px 16px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
+.mfs{display:flex;gap:8px;overflow-x:auto;margin:-4px -16px 14px;padding:2px 16px;scrollbar-width:none}.mfs::-webkit-scrollbar{display:none}
+.mf{flex:none;min-width:112px;padding:10px 14px;border-radius:16px;text-align:left;background:var(--glass);border:1px solid var(--line);color:var(--ink);display:flex;flex-direction:column;gap:3px}
+.mf span{font-size:12px;font-weight:600;color:var(--soft)}.mf b{font-size:15px;font-weight:700}
+.mf.on{background:var(--g1);border-color:transparent;box-shadow:0 6px 20px -6px rgba(157,251,139,.6)}.mf.on span,.mf.on b{color:var(--gink)}
+html[data-theme=ocean] .mf.on{box-shadow:0 6px 20px -6px rgba(143,196,255,.7)}
 .chip{flex:none;height:38px;padding:0 14px;border-radius:99px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--soft);background:var(--glass);border:1px solid var(--line)}
 .chip.on{background:var(--g1);color:var(--gink);border-color:transparent;box-shadow:0 6px 20px -6px rgba(157,251,139,.6)}
 .list{padding:4px 12px}
@@ -359,6 +364,7 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
 
   <main class="view" id="v-stats">
     <h1>Статистика</h1>
+    <div class="mfs" id="mFolders"></div>
     <div class="glass">
       <div class="donut"><svg viewBox="0 0 200 200" id="donut"></svg><div class="mid"><span>за месяц</span><b class="n" id="donutSum"></b></div></div>
       <div style="padding:0 14px 10px" id="allCats"></div>
@@ -367,6 +373,7 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
     <div class="glass bars" id="bars"></div>
     <h2>Факты</h2>
     <div class="facts" id="facts"></div>
+    <div id="mOpsWrap" hidden><h2 id="mOpsH">Операции</h2><div class="glass" id="mOps"></div></div>
   </main>
 
   <main class="view" id="v-tasks">
@@ -659,28 +666,52 @@ function renderHist(){
 }
 $('q').oninput = renderHist;
 
+let SM = null, MC = {};
+const MN = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+function renderFolders(){
+  let H = Array.isArray(D.hist) ? D.hist.slice() : []; if(!H.some(h => h[0] === D.m)) H.unshift([D.m, D.sp, D.in, 0]);
+  H.sort((a, b) => a[0] < b[0] ? 1 : -1); const sel = SM || D.m, yNow = +D.m.slice(0, 4);
+  $('mFolders').innerHTML = H.map(([k, sp]) => { const [y, m] = k.split('-').map(Number), cur = k === D.m ? D.sp : sp;
+    return '<button class="mf ' + (k === sel ? 'on' : '') + '" data-m="' + k + '"><span>📁 ' + MN[m-1] + (y !== yNow ? ' ' + y : '') + '</span><b class="n">' + fmt(cur, 0) + ' ' + B() + '</b></button>' }).join('');
+  $('mFolders').hidden = H.length < 2;
+  $('mFolders').querySelectorAll('.mf').forEach(el => el.onclick = () => { const k = el.dataset.m; tick(); pickMonth(k === D.m ? null : k) });
+}
+function pickMonth(k){
+  SM = k; if(!k || MC[k]) return renderStats();
+  if(!window.apiFetch){ SM = null; return renderStats() }
+  renderFolders(); $('donutSum').textContent = '…';
+  window.apiFetch({t:'month', m:k}).then(d => { if(d && !d.error){ MC[k] = d } else SM = null; renderStats() }).catch(() => { SM = null; renderStats() });
+}
 function renderStats(){
-  const cats = Object.entries(D.cat).filter(c => c[1] > 0).sort((a,b) => b[1]-a[1]);
+  if(MC.__d !== D){ const k = SM; MC = {__d: D}; if(k){ SM = null; return pickMonth(k) } }
+  if(SM && !MC[SM]) SM = null;
+  renderFolders();
+  const S = SM ? MC[SM] : D, [y, mo] = S.m.split('-').map(Number), dim = new Date(y, mo, 0).getDate(), isCur = !SM && IS_CUR, today = isCur ? TODAY : dim;
+  $('donut').parentNode.querySelector('.mid span').textContent = SM ? MN[mo-1].toLowerCase() : 'за месяц';
+  const cats = Object.entries(S.cat).filter(c => c[1] > 0).sort((a,b) => b[1]-a[1]);
   const R = 78, C = 2 * Math.PI * R; let off = 0;
   $('donut').innerHTML = '<circle cx="100" cy="100" r="' + R + '" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="22"/>' + cats.map(([c,v]) => {
-    const len = v / D.sp * C, gap = cats.length > 1 ? 9 : 0;
+    const len = v / S.sp * C, gap = cats.length > 1 ? 9 : 0;
     const s = '<circle cx="100" cy="100" r="' + R + '" fill="none" stroke="' + catColor[c] + '" stroke-width="22" stroke-linecap="round" stroke-dasharray="' + Math.max(.1,len-gap) + ' ' + C + '" stroke-dashoffset="' + (-off-gap/2) + '"/>';
     off += len; return s }).join('');
-  $('donutSum').textContent = fmt(D.sp, 0) + ' ' + B();
-  $('allCats').innerHTML = cats.length ? cats.map(([c,v]) => '<div class="crow"><div class="t"><span>' + emo(c) + ' ' + nm(c) + '<em>' + fmt(v/D.sp*100,0) + '%</em></span><span class="n">' + fmt(v) + '</span></div><div class="bar"><i style="background:' + catColor[c] + '" data-w="' + (v/cats[0][1]*100) + '"></i></div></div>').join('')
+  $('donutSum').textContent = fmt(S.sp, 0) + ' ' + B();
+  $('allCats').innerHTML = cats.length ? cats.map(([c,v]) => '<div class="crow"><div class="t"><span>' + emo(c) + ' ' + nm(c) + '<em>' + fmt(v/S.sp*100,0) + '%</em></span><span class="n">' + fmt(v) + '</span></div><div class="bar"><i style="background:' + catColor[c] + '" data-w="' + (v/cats[0][1]*100) + '"></i></div></div>').join('')
     : '<div class="empty">Добавь пару трат, и здесь появится разбивка</div>';
   requestAnimationFrame(() => document.querySelectorAll('.crow .bar i').forEach(i => i.style.width = i.dataset.w + '%'));
-  const vals = Array.from({length:DIM}, (_,i) => D.day[i+1] || 0), norm = D.lim / DIM, max = Math.max(norm * 1.6, ...vals) || 1;
-  $('bars').innerHTML = vals.map((v,i) => '<i class="b ' + (IS_CUR && i+1 > TODAY ? 'fu' : v > norm*1.25 ? 'ov' : v > norm*.8 ? 'hi' : '') + '" style="height:' + Math.max(2, v/max*100) + '%"></i>').join('')
-    + '<div class="ln" style="bottom:calc(30px + ' + (norm/max)*(150-46) + 'px)"></div><div class="ax"><span>1</span><span>норма ' + fmt(norm,0) + ' ' + B() + '/день</span><span>' + DIM + '</span></div>';
-  const exp = D.rec.filter(r => r[2]==='exp'), big = exp.slice().sort((a,b) => b[7]-a[7])[0];
+  const vals = Array.from({length:dim}, (_,i) => S.day[i+1] || 0), norm = S.lim / dim, max = Math.max(norm * 1.6, ...vals) || 1;
+  $('bars').innerHTML = vals.map((v,i) => '<i class="b ' + (isCur && i+1 > today ? 'fu' : v > norm*1.25 ? 'ov' : v > norm*.8 ? 'hi' : '') + '" style="height:' + Math.max(2, v/max*100) + '%"></i>').join('')
+    + '<div class="ln" style="bottom:calc(30px + ' + (norm/max)*(150-46) + 'px)"></div><div class="ax"><span>1</span><span>норма ' + fmt(norm,0) + ' ' + B() + '/день</span><span>' + dim + '</span></div>';
+  const exp = S.rec.filter(r => r[2]==='exp'), big = exp.slice().sort((a,b) => b[7]-a[7])[0];
   const maxDay = vals.reduce((m,v,i) => v > m[0] ? [v,i+1] : m, [0,0]), crypto = exp.filter(r => CRYPTO.includes(r[6])).reduce((s,r) => s + r[7], 0);
-  const prevPace = D.prev ? D.prev / new Date(Y, MO-1, 0).getDate() * TODAY : 0;
-  const facts = [['В среднем за день', fmt(D.sp / TODAY) + ' ' + B(), 'норма ' + fmt(norm,0) + ' ' + B()],
-    ['Самый дорогой день', maxDay[0] ? fmt(maxDay[0]) + ' ' + B() : '—', maxDay[0] ? new Date(Y, MO-1, maxDay[1]).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}) : ''],
+  const prevPace = S.prev ? S.prev / new Date(y, mo-1, 0).getDate() * today : 0;
+  const facts = [['В среднем за день', fmt(S.sp / today) + ' ' + B(), 'норма ' + fmt(norm,0) + ' ' + B()],
+    ['Самый дорогой день', maxDay[0] ? fmt(maxDay[0]) + ' ' + B() : '—', maxDay[0] ? new Date(y, mo-1, maxDay[1]).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}) : ''],
     ['Крупнейшая трата', big ? fmt(big[7]) + ' ' + B() : '—', big ? esc(big[3]) : ''],
     ['Потрачено криптой', fmt(crypto) + ' ' + B(), toB(1,'GRAM') != null ? '1 GRAM = ' + fmt(toB(1,'GRAM')) + ' ' + B() : '']];
-  if(prevPace){ const d = (D.sp - prevPace) / prevPace * 100; facts.push(['К прошлому месяцу', (d>0?'+':'') + fmt(d,0) + '%', d>0 ? 'тратишь быстрее' : 'тратишь медленнее']) }
+  if(prevPace){ const d = (S.sp - prevPace) / prevPace * 100; facts.push(['К прошлому месяцу', (d>0?'+':'') + fmt(d,0) + '%', SM ? (d>0 ? 'потрачено больше' : 'потрачено меньше') : (d>0 ? 'тратишь быстрее' : 'тратишь медленнее')]) }
+  $('mOpsWrap').hidden = !SM;
+  if(SM){ $('mOpsH').textContent = 'Операции · ' + MN[mo-1].toLowerCase() + ' (' + S.rec.length + ')'; $('mOps').innerHTML = S.rec.length ? listHTML(S.rec, true) : '<div class="empty">В этом месяце записей нет</div>';
+    $('mOps').querySelectorAll('.tx').forEach(el => el.onclick = () => openTx(S.rec.find(r => r[0] == el.dataset.id))) }
   $('facts').innerHTML = facts.map(([k,v,e]) => '<div class="glass fact"><span>' + k + '</span><b class="n">' + v + '</b><em>' + e + '</em></div>').join('');
 }
 
