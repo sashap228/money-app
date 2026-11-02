@@ -855,16 +855,24 @@ let tk = {day:null, time:null};
 function drawTask(){
   const days = [['none','Без даты',null],['0','Сегодня',0],['1','Завтра',1],['2','Послезавтра',2]];
   for(let o = 3; o < 7; o++){ const d = new Date(dayStart(o)*1000); days.push([String(o), WDN[d.getDay()].replace(/^./, c => c.toUpperCase()) + ', ' + d.getDate(), o]) }
-  const custom = typeof tk.day === 'string' && tk.day.includes('-');
-  $('tkDays').innerHTML = days.map(([k,l]) => '<button class="chip ' + ((tk.day == null ? 'none' : String(tk.day)) === k ? 'on' : '') + '" data-d="' + k + '">' + l + '</button>').join('')
-    + '<label class="chip tsel ' + (custom ? 'on' : '') + '">📅 ' + (custom ? new Date(tk.day + 'T00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short'}) : 'Дата') + '<input type="date" id="tkDate"></label>';
-  const times = [['none','Без времени'],['09:00','09:00'],['13:00','13:00'],['19:00','19:00'],['21:00','21:00']], ct = tk.time && !times.some(t => t[0] === tk.time);
-  $('tkTimes').innerHTML = times.map(([k,l]) => '<button class="chip ' + ((tk.time || 'none') === k ? 'on' : '') + '" data-t="' + k + '">' + l + '</button>').join('')
-    + '<label class="chip tsel ' + (ct ? 'on' : '') + '">🕐 ' + (ct ? tk.time : 'Своё') + '<input type="time" id="tkTime"></label>';
+  const times = [['none','Без времени'],['09:00','09:00'],['13:00','13:00'],['19:00','19:00'],['21:00','21:00']];
+  // build once: the native date/time inputs must never be re-created while iOS shows its picker
+  if(!$('tkTime')){
+    $('tkDays').innerHTML = '<span class="tkc" style="display:contents"></span><label class="chip tsel" id="tkDateL"><span></span><input type="date" id="tkDate"></label>';
+    $('tkTimes').innerHTML = '<span class="tkc" style="display:contents"></span><label class="chip tsel" id="tkTimeL"><span></span><input type="time" id="tkTime"></label>';
+    const setDate = e => { const v = e.target.value; if(v && v !== tk.day){ tk.day = v; tick(); drawTask() } };
+    const setTime = e => { const v = e.target.value; if(v && v !== tk.time){ tk.time = v; if(tk.day == null) tk.day = 0; tick(); drawTask() } };
+    $('tkDate').addEventListener('change', setDate); $('tkDate').addEventListener('blur', setDate);
+    $('tkTime').addEventListener('change', setTime); $('tkTime').addEventListener('blur', setTime);
+  }
+  const custom = typeof tk.day === 'string' && tk.day.includes('-'), ct = tk.time && !times.some(t => t[0] === tk.time);
+  $('tkDays').querySelector('.tkc').innerHTML = days.map(([k,l]) => '<button class="chip ' + ((tk.day == null ? 'none' : String(tk.day)) === k ? 'on' : '') + '" data-d="' + k + '">' + l + '</button>').join('');
+  $('tkTimes').querySelector('.tkc').innerHTML = times.map(([k,l]) => '<button class="chip ' + ((tk.time || 'none') === k ? 'on' : '') + '" data-t="' + k + '">' + l + '</button>').join('');
+  $('tkDateL').classList.toggle('on', custom); $('tkDateL').firstChild.textContent = '📅 ' + (custom ? new Date(tk.day + 'T00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short'}) : 'Дата');
+  $('tkTimeL').classList.toggle('on', !!ct); $('tkTimeL').firstChild.textContent = '🕐 ' + (ct ? tk.time : 'Своё');
+  if(!custom && $('tkDate').value) $('tkDate').value = ''; if(!ct && $('tkTime').value) $('tkTime').value = '';
   $('tkDays').querySelectorAll('[data-d]').forEach(b => b.onclick = () => { tk.day = b.dataset.d === 'none' ? null : +b.dataset.d; if(tk.day == null) tk.time = null; tick(); drawTask() });
   $('tkTimes').querySelectorAll('[data-t]').forEach(b => b.onclick = () => { tk.time = b.dataset.t === 'none' ? null : b.dataset.t; if(tk.time && tk.day == null) tk.day = 0; tick(); drawTask() });
-  $('tkDate').onchange = e => { if(e.target.value){ tk.day = e.target.value; tick(); drawTask() } };
-  $('tkTime').onchange = e => { if(e.target.value){ tk.time = e.target.value; if(tk.day == null) tk.day = 0; tick(); drawTask() } };
   $('tkSave').disabled = !$('tkText').value.trim();
 }
 function openTask(){ tk = {day:null, time:null}; $('tkText').value = ''; drawTask(); openSheet('sTask'); setTimeout(() => $('tkText').focus(), 350) }
@@ -918,10 +926,13 @@ function drawGoalNew(){
   $('gnCurs').innerHTML = CURS().map(c => chip(c, emo_c(c), gn.cur)).join('');
   $('gnCurs').querySelectorAll('.chip').forEach(b => b.onclick = () => { gn.cur = b.dataset.f; tick(); drawGoalNew() });
   const opts = [['none','Без срока',null],['3','3 месяца',3],['6','Полгода',6],['12','Год',12]], custom = typeof gn.dl === 'string';
-  $('gnDl').innerHTML = opts.map(([k,l]) => '<button class="chip ' + ((gn.dl == null ? 'none' : String(gn.dl)) === k ? 'on' : '') + '" data-m="' + k + '">' + l + '</button>').join('')
-    + '<label class="chip tsel ' + (custom ? 'on' : '') + '">📅 ' + (custom ? new Date(gn.dl + 'T00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'}) : 'Дата') + '<input type="date" id="gnDate"></label>';
+  if(!$('gnDate')){ $('gnDl').innerHTML = '<span class="gnc" style="display:contents"></span><label class="chip tsel" id="gnDateL"><span></span><input type="date" id="gnDate"></label>';
+    const setD = e => { const v = e.target.value; if(v && v !== gn.dl){ gn.dl = v; tick(); drawGoalNew() } };
+    $('gnDate').addEventListener('change', setD); $('gnDate').addEventListener('blur', setD) }
+  $('gnDl').querySelector('.gnc').innerHTML = opts.map(([k,l]) => '<button class="chip ' + ((gn.dl == null ? 'none' : String(gn.dl)) === k ? 'on' : '') + '" data-m="' + k + '">' + l + '</button>').join('');
+  $('gnDateL').classList.toggle('on', custom); $('gnDateL').firstChild.textContent = '📅 ' + (custom ? new Date(gn.dl + 'T00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'}) : 'Дата');
+  if(!custom && $('gnDate').value) $('gnDate').value = '';
   $('gnDl').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { gn.dl = b.dataset.m === 'none' ? null : +b.dataset.m; tick(); drawGoalNew() });
-  $('gnDate').onchange = e => { if(e.target.value){ gn.dl = e.target.value; tick(); drawGoalNew() } };
   $('gnSave').disabled = !(name.trim() && parseFloat($('gnAmt').value.replace(',','.').replace(/\s/g,'')) > 0);
 }
 const emo_c = c => emo(c) + ' ' + c;
