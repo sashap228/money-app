@@ -95,6 +95,7 @@
     '.ai{display:inline-grid;place-items:center;flex:none;width:1.45em;height:1.45em;vertical-align:-.38em;border-radius:31%;position:relative;overflow:hidden;' +
     'background:linear-gradient(145deg,var(--a),var(--b));box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -2px 6px rgba(0,0,0,.12),0 6px 16px -8px var(--b)}' +
     '.ai:before{content:"";position:absolute;inset:0;background:radial-gradient(90% 60% at 25% 0%,rgba(255,255,255,.45),transparent 60%);pointer-events:none}' +
+    '.ug{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;display:inline-block}' +
     '.ai svg{width:64%;height:64%;overflow:visible;fill:none;stroke:#fff;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;position:relative;filter:drop-shadow(0 1px 1px rgba(0,0,0,.18))}' +
     '.ai .f{fill:#fff;stroke:none}.ai .tx{fill:#fff;stroke:none;font:800 7.5px Onest,system-ui,sans-serif}' +
     '.ai svg *{transform-box:fill-box;transform-origin:center}' +
@@ -141,8 +142,53 @@
 
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
+
+  // цели (ключ — эмодзи, которое хранится в базе)
+  var GI = {
+    '🎯': ['#fda4af', '#e11d48', '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.8"/><circle class="f beat" cx="12" cy="12" r="1.9"/>'],
+    '📱': ['#93c5fd', '#2563eb', '<rect x="7" y="2.8" width="10" height="18.4" rx="2.6"/><path d="M10.6 17.8h2.8"/><path class="wave" d="M19.5 8.5a4.5 4.5 0 0 1 0 6"/>'],
+    '💻': ['#a5b4fc', '#4f46e5', '<rect x="4" y="5" width="16" height="10.5" rx="1.8"/><path d="M2 19h20"/><path class="blink" d="M8 10.2h3"/>'],
+    '🚗': ['#fca5a5', '#dc2626', '<g class="bounce"><path d="M3 15.5 5 10a2 2 0 0 1 1.9-1.4h10.2A2 2 0 0 1 19 10l2 5.5V18H3z"/><path d="M3 14h18"/></g><circle class="f" cx="7.2" cy="18.6" r="1.9"/><circle class="f" cx="16.8" cy="18.6" r="1.9"/>'],
+    '✈': ['#7dd3fc', '#0284c7', '<g class="bob"><path d="M21 3.5 2.8 10.6l7 2.6 2.6 7.3z"/><path d="M9.8 13.2 21 3.5"/></g>'],
+    '🏠': ['#fcd34d', '#d97706', '<path d="M3.5 11 12 4l8.5 7"/><path d="M5.8 9.4V20h12.4V9.4"/><path d="M10 20v-5h4v5"/><path class="smoke" d="M16.5 4.5c-.8-1 .8-1.6 0-2.6"/>'],
+    '🎁': ['#f9a8d4', '#db2777', '<rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5V20h14v-7.5M12 8.5V20"/><g class="bob"><path d="M12 8.5c-1.6-3.6-5.6-4-5.6-1.4S9.6 8.5 12 8.5zM12 8.5c1.6-3.6 5.6-4 5.6-1.4S14.4 8.5 12 8.5z"/></g>'],
+    '🛟': ['#fdba74', '#ea580c', '<g class="spin"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.8"/><path d="m6 6 3.3 3.3M18 6l-3.3 3.3M6 18l3.3-3.3M18 18l-3.3-3.3"/></g>'],
+    '🎓': ['#c4b5fd', '#7c3aed', '<path d="M2 9.5 12 5l10 4.5L12 14z"/><path d="M6 11.6V16c0 1.4 2.7 3 6 3s6-1.6 6-3v-4.4"/><path class="sway" d="M22 9.5V15"/>'],
+    '👟': ['#6ee7b7', '#059669', '<g class="bounce"><path d="M2.8 17.5V9.2l4.2 1.1 2.6-3 3.1 4.6c3 .5 8.5 1.6 8.5 5.6z"/><path d="M2.8 17.5h18.4M9.5 11.5l1.5-1M11 13.5l1.6-1"/></g>'],
+    '💍': ['#fde68a', '#ca8a04', '<circle cx="12" cy="15" r="5.8"/><path class="tw" d="M9.2 6.3 10.6 4h2.8l1.4 2.3L12 9.2z"/>'],
+    '🐷': ['#f9a8d4', '#ec4899', '<path d="M4.6 12.6c0-3.6 3.3-6.1 7.4-6.1 1.6 0 3.1.4 4.3 1.1l2.6-1.3v3.2c.8.8 1.3 1.7 1.5 2.8h1.4v3.1h-1.7c-.5 1-1.3 1.8-2.3 2.4V20h-3v-1.3c-.9.2-1.9.3-2.9.3s-2-.1-2.9-.3V20H6.1v-2.3c-1-.9-1.5-2.9-1.5-5.1z"/><circle class="f" cx="16" cy="11.2" r="1"/><circle class="f bob" cx="12" cy="3" r="1.6"/>'],
+    '✅': ['#86efac', '#16a34a', '<path class="pulse" d="m5 12.5 4.5 4.5L19 7.5"/>'],
+    '🔴': ['#fca5a5', '#dc2626', '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.2"/><circle class="f blink" cx="12" cy="16.3" r="1.2"/>'],
+    '📝': ['#93c5fd', '#2563eb', '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/><path class="blink" d="M12 20h7"/>'],
+    '🙌': ['#86efac', '#16a34a', '<path d="m5 12.5 4.5 4.5L19 7.5"/><path class="tw" d="M19 2.5v3M17.5 4h3"/><path class="tw d1" d="M4.5 4v2.4M3.3 5.2h2.4"/>'],
+    '👋': ['#fef08a', '#f59e0b', '<g class="tw"><path class="f" d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></g><path class="tw d1" d="M19 15.5v4M17 17.5h4"/>']
+  };
+  GI['🎮'] = I['Игры'];
+  for(var k in GI) I[k] = GI[k];
+  window.GEMO_ICON = function(e){ return window.ICON(String(e).replace(/️/g, '')) };
+  // монохромные глифы для интерфейса (цвет = currentColor)
+  var U = {
+    cal: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.6"/><path d="M3.5 9.8h17M8 3v4M16 3v4"/>',
+    clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    folder: '<path d="M3 7.6a2 2 0 0 1 2-2h4l2 2.1h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+    late: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.6v5"/><path d="M12 16.2h.01"/>',
+    today: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/>',
+    tom: '<path d="M3.5 18.5h17M7 18.5a5 5 0 0 1 10 0M12 5.5v3M5.4 9.4l1.9 1.9M18.6 9.4l-1.9 1.9"/>',
+    later: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.6"/><path d="M3.5 9.8h17M8 3v4M16 3v4M10 14.5h4m-1.5-1.5 1.5 1.5-1.5 1.5"/>',
+    none: '<circle cx="12" cy="12" r="8.5" stroke-dasharray="3 3"/>',
+    check: '<circle cx="12" cy="12" r="8.5"/><path d="m8.3 12.3 2.6 2.6 4.9-5"/>',
+    bell: '<path d="M6 16v-5a6 6 0 0 1 12 0v5l1.6 2H4.4z"/><path d="M10 20.6h4"/>',
+    spark: '<path d="M12 3.5 13.6 8 18 9.6l-4.4 1.6L12 15.6l-1.6-4.4L6 9.6 10.4 8z"/><path d="M18.5 15v4M16.5 17h4"/>',
+    undo: '<path d="M9 6.5 4.5 11 9 15.5"/><path d="M4.5 11H15a4.5 4.5 0 0 1 0 9h-2"/>',
+    piggy: '<path d="M4.6 12.6c0-3.6 3.3-6.1 7.4-6.1 1.6 0 3.1.4 4.3 1.1l2.6-1.3v3.2c.8.8 1.3 1.7 1.5 2.8h1.4v3.1h-1.7c-.5 1-1.3 1.8-2.3 2.4V20h-3v-1.3c-.9.2-1.9.3-2.9.3s-2-.1-2.9-.3V20H6.1v-2.3c-1-.9-1.5-2.9-1.5-5.1z"/><path d="M16 11.2h.01"/>',
+    trophy: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5.2A3 3 0 0 0 8 10.5M16 6h2.8a3 3 0 0 1-2.8 4.5M12 13v4M8.5 20.5h7M10 17h4"/>',
+    sun: '<circle cx="12" cy="12" r="3.8"/><path d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5l1.4 1.4M17.1 17.1l1.4 1.4M5.5 18.5l1.4-1.4M17.1 6.9l1.4-1.4"/>',
+    moon: '<path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z"/>',
+    back: '<path d="M8.5 5.5h11a1.5 1.5 0 0 1 1.5 1.5v10a1.5 1.5 0 0 1-1.5 1.5h-11L3 12z"/><path d="m11.5 9.5 5 5m0-5-5 5"/>'
+  };
+  window.UG = function(n){ return '<svg class="ug" viewBox="0 0 24 24" aria-hidden="true">' + (U[n] || '') + '</svg>' };
   window.ICON = function(c){
-    var s = String(c), sp = s.indexOf(' '), name = sp > 0 ? s.slice(sp + 1) : s;
+    var s = String(c).replace(/\uFE0F/g, ''), sp = s.indexOf(' '), name = sp > 0 ? s.slice(sp + 1) : s;
     var d = I[name] || I[s];
     if(!d) return '<span class="ai" style="--a:#cbd5e1;--b:#475569;font-size:inherit"><span style="font-size:.8em">' + (sp > 0 ? s.slice(0, sp) : s) + '</span></span>';
     return '<span class="ai" style="--a:' + d[0] + ';--b:' + d[1] + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + d[2] + '</svg></span>';
