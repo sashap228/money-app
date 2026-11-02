@@ -85,6 +85,7 @@
     }).then(function(){ if(btn) btn.disabled = false });
   };
 
+  window.apiFetch = function(obj){ return live ? call('/api/act', obj) : Promise.reject(new Error('offline')) };
   if(api) cloudSet(api);
   if(api && initData) load(api);
   else if(initData) cloudGet(load);
