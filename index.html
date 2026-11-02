@@ -281,6 +281,7 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
 .tquick input{flex:1;min-width:0;height:44px;font-size:15px;font-weight:500;outline:none}.tquick input::placeholder{color:var(--faint)}
 .tquick button{width:44px;height:44px;border-radius:15px;flex:none;font-size:24px;font-weight:600;color:var(--gink);background:linear-gradient(140deg,var(--g1),var(--g2));box-shadow:0 6px 18px -6px var(--g2)}
 .thint{font-size:12px;color:var(--faint);margin:0 4px 6px}
+.tdh span:first-child{display:inline-flex;align-items:center;gap:6px}.ge .ai{width:100%;height:100%;border-radius:inherit;font-size:24px}#gnEmos .ai{width:26px;height:26px;border-radius:9px}.ge{background:none;overflow:hidden}.bigic{width:58px;height:58px;margin:0 auto}.bigic .ai{width:100%;height:100%;border-radius:19px}.ic>.ai{width:100%;height:100%;border-radius:inherit}.chip .ug,.mf .ug{margin-right:2px}
 .tdh{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--soft);margin:18px 6px 8px}.tdh.late{color:var(--red)}
 .tk{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:center;padding:4px 2px;animation:m-up .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 35ms)}
 .tk+.tk{border-top:1px solid var(--line)}
@@ -319,7 +320,7 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
   <main class="view on" id="v-home">
     <div class="top">
       <div class="ava" id="ava">₿</div>
-      <div class="hi"><small id="greet">Привет 👋</small><b id="hi">Твои деньги</b></div>
+      <div class="hi"><small id="greet">Привет</small><b id="hi">Твои деньги</b></div>
       <button class="pill glass" data-go="set">Лимит <b id="limTop"></b></button>
     </div>
     <section class="hero" id="hero">
@@ -486,7 +487,7 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
 
 <div class="sheet" id="sGoalNew">
   <div class="grab"></div>
-  <div class="txh"><div class="ic" id="gnEmo" style="display:grid;place-items:center;font-size:46px">🎯</div><b>Новая цель</b></div>
+  <div class="txh"><div class="ic" id="gnEmo"></div><b>Новая цель</b></div>
   <div class="row" id="gnEmos" style="margin-top:4px"></div>
   <div class="glass field"><label>На что копишь</label><input id="gnName" maxlength="40" placeholder="Айфон, отпуск, подушка…" autocomplete="off"></div>
   <div class="glass field"><label>Сколько нужно</label><input id="gnAmt" class="n" inputmode="decimal" placeholder="0"></div>
@@ -502,7 +503,7 @@ html[data-theme=ocean] .obgrid button.on{box-shadow:0 0 0 4px rgba(143,196,255,.
   <p class="gsum" id="gSum"></p>
   <div class="glass field"><label>Сумма</label><input id="gAmt" class="n" inputmode="decimal" placeholder="0"></div>
   <div class="row" id="gQuick"></div>
-  <div class="pacts"><button class="primary" id="gIn">🐷 Отложить</button><button class="chip" id="gOut">Взять обратно</button></div>
+  <div class="pacts"><button class="primary" id="gIn">Отложить</button><button class="chip" id="gOut">Взять обратно</button></div>
   <button class="danger" id="gDel">Удалить цель</button>
 </div>
 
@@ -574,6 +575,7 @@ const PAL = THEMES[THEME].pal.slice();
 const fmt = (x, d=2) => Number(x).toLocaleString('ru-RU',{maximumFractionDigits:d});
 const money = x => { const s = fmt(Math.abs(x)), k = s.indexOf(','); return k < 0 ? s : s.slice(0,k) + '<i>' + s.slice(k) + '</i>' };
 const emo = c => window.ICON ? ICON(c) : c.split(' ')[0], nm = c => c.split(' ').slice(1).join(' ');
+const ug = n => window.UG ? UG(n) : '', gi = e => window.GEMO_ICON ? GEMO_ICON(e) : e;
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rate = () => (D.gram && D.usd) ? (+D.gram) * (+D.usd) : null;
 const FIATS = {BYN:['🇧🇾','Белорусские рубли','Br'], RUB:['🇷🇺','Российские рубли','₽'], USD:['🇺🇸','Доллары','$'], EUR:['🇪🇺','Евро','€'], UAH:['🇺🇦','Гривны','₴'], KZT:['🇰🇿','Тенге','₸'], PLN:['🇵🇱','Злотые','zł']};
@@ -604,7 +606,7 @@ const chip = (f, label, cur) => '<button class="chip ' + (cur === f ? 'on' : '')
 function renderHome(){
   const u = inTg && tg.initDataUnsafe && tg.initDataUnsafe.user, name = D.name || (u && u.first_name) || '';
   const h = NOW.getHours();
-  $('greet').textContent = (h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер') + ' 👋';
+  $('greet').innerHTML = (h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер') + ' ' + ug(h >= 6 && h < 19 ? 'sun' : 'moon');
   $('hi').textContent = name || 'Твои деньги';
   $('ava').textContent = name ? name[0].toUpperCase() : '₿';
   $('limTop').textContent = fmt(D.lim,0);
@@ -672,7 +674,7 @@ function renderFolders(){
   let H = Array.isArray(D.hist) ? D.hist.slice() : []; if(!H.some(h => h[0] === D.m)) H.unshift([D.m, D.sp, D.in, 0]);
   H.sort((a, b) => a[0] < b[0] ? 1 : -1); const sel = SM || D.m, yNow = +D.m.slice(0, 4);
   $('mFolders').innerHTML = H.map(([k, sp]) => { const [y, m] = k.split('-').map(Number), cur = k === D.m ? D.sp : sp;
-    return '<button class="mf ' + (k === sel ? 'on' : '') + '" data-m="' + k + '"><span>📁 ' + MN[m-1] + (y !== yNow ? ' ' + y : '') + '</span><b class="n">' + fmt(cur, 0) + ' ' + B() + '</b></button>' }).join('');
+    return '<button class="mf ' + (k === sel ? 'on' : '') + '" data-m="' + k + '"><span>' + ug('folder') + ' ' + MN[m-1] + (y !== yNow ? ' ' + y : '') + '</span><b class="n">' + fmt(cur, 0) + ' ' + B() + '</b></button>' }).join('');
   $('mFolders').hidden = H.length < 2;
   $('mFolders').querySelectorAll('.mf').forEach(el => el.onclick = () => { const k = el.dataset.m; tick(); pickMonth(k === D.m ? null : k) });
 }
@@ -727,8 +729,8 @@ function renderSet(){
     $('presets').querySelectorAll('.chip').forEach(b => b.onclick = () => { $('limIn').value = b.dataset.f; tick(); draw() });
     $('limSave').disabled = !(parseFloat($('limIn').value.replace(',','.')) > 0) || +$('limIn').value === D.lim };
   $('limIn').oninput = draw; draw();
-  const rl = ['USD','EUR','RUB','BYN'].filter(c => c !== B() && fxByn(c)).map(c => { const v = toB(1, c); return '<li><span style="color:var(--ink)">' + FIATS[c][0] + ' 1 ' + c + '</span><b class="n">' + (v == null ? '—' : fmt(v, v < .1 ? 4 : 2) + ' ' + B()) + '</b></li>' }).join('');
-  $('ratesCard').innerHTML = '<h3>Курсы</h3><p>Нацбанк РБ и CoinGecko, обновляются сами</p><ul class="howto">' + rl + '<li><span style="color:var(--ink)">💎 1 GRAM</span><b class="n">' + (toB(1,'GRAM') != null ? fmt(toB(1,'GRAM')) + ' ' + B() : '—') + '</b></li></ul>';
+  const rl = ['USD','EUR','RUB','BYN'].filter(c => c !== B() && fxByn(c)).map(c => { const v = toB(1, c); return '<li><span style="color:var(--ink)">' + emo(c) + ' 1 ' + c + '</span><b class="n">' + (v == null ? '—' : fmt(v, v < .1 ? 4 : 2) + ' ' + B()) + '</b></li>' }).join('');
+  $('ratesCard').innerHTML = '<h3>Курсы</h3><p>Нацбанк РБ и CoinGecko, обновляются сами</p><ul class="howto">' + rl + '<li><span style="color:var(--ink)">' + emo('GRAM') + ' 1 GRAM</span><b class="n">' + (toB(1,'GRAM') != null ? fmt(toB(1,'GRAM')) + ' ' + B() : '—') + '</b></li></ul>';
 }
 $('limSave').onclick = () => { const v = parseFloat($('limIn').value.replace(',','.')); if(v > 0) send({t:'limit', v}, 'Лимит ' + fmt(v,0) + ' ' + B() + ' сохранён') };
 
@@ -812,7 +814,7 @@ const OB = (() => {
     $('obBack').disabled = step === 0;
     try{ if(step > 0 || edit) tg.BackButton.show(); else tg.BackButton.hide() }catch(e){}
     let h = '';
-    if(step === 0) h = '<div class="obhero"><span>👋</span></div><h2>' + (edit ? 'Твой профиль' : 'Привет! Давай познакомимся') + '</h2><p>Пара вопросов, и бот подстроится под тебя. Займёт 20 секунд.</p>'
+    if(step === 0) h = '<div class="obhero"><span style="color:var(--gink)">' + ug('spark') + '</span></div><h2>' + (edit ? 'Твой профиль' : 'Привет! Давай познакомимся') + '</h2><p>Пара вопросов, и бот подстроится под тебя. Займёт 20 секунд.</p>'
       + '<p class="oblbl">Как тебя зовут?</p><input class="obname glass" id="obName" maxlength="30" autocomplete="given-name" placeholder="Имя" value="' + esc(f.name) + '">';
     if(step === 1) h = '<h2>Основная валюта</h2><p>В ней будут лимит, отчёты и графики. Траты без валюты тоже пойдут в ней.</p><div class="obgrid" id="obG">' + Object.keys(FIATS).map(c => tile(c, f.base === c)).join('') + '</div>';
     if(step === 2) h = '<h2>Чем ещё пользуешься?</h2><p>Эти валюты появятся в кошельке и при добавлении трат. Можно ничего не выбирать.</p>'
@@ -823,7 +825,7 @@ const OB = (() => {
       + '<div class="chips" id="obP">' + LIMP[f.base].map(p => chip(String(p), fmt(p,0) + ' ' + f.base, String(f.lim))).join('') + '</div>'
       + '<p class="obnote">Всё это можно поменять потом в настройках.</p>';
     $('obBody').innerHTML = '<div class="obstep' + (dir < 0 ? ' back' : '') + '">' + h + '</div>';
-    $('obNext').textContent = step === 3 ? (edit ? 'Сохранить' : 'Готово, поехали 🚀') : 'Дальше';
+    $('obNext').textContent = step === 3 ? (edit ? 'Сохранить' : 'Готово, поехали') : 'Дальше';
     if(step === 0){ const i = $('obName'); i.oninput = () => { f.name = i.value; check() }; i.onkeydown = e => { if(e.key === 'Enter') next() } }
     if(step === 1) $('obG').querySelectorAll('button').forEach(b => b.onclick = () => { if(f.base !== b.dataset.c){ const old = f.base; f.base = b.dataset.c; f.curs = f.curs.filter(c => c !== f.base); if(old && !f.curs.includes(old) && !edit) f.curs.unshift(old); f.lim = LIMP[f.base][2] } tick(); draw(0) });
     if(step === 2) $('obBody').querySelectorAll('#obF button, #obC button').forEach(b => b.onclick = () => { const c = b.dataset.c; f.curs = f.curs.includes(c) ? f.curs.filter(x => x !== c) : [...f.curs, c]; b.classList.toggle('on'); tick() });
@@ -864,18 +866,18 @@ const plural = (n, a, b, c) => { n = Math.abs(n) % 100; const k = n % 10; return
 function renderTasks(){
   const L = D.tasks || [], now = Date.now()/1000, t0 = dayStart(0), t1 = dayStart(1), t2 = dayStart(2);
   const open = L.filter(x => !x[4]), done = L.filter(x => x[4]).sort((a,b) => b[4]-a[4]);
-  const G = [['late','🔴 Просрочено',[]],['today','📌 Сегодня',[]],['tom','🌅 Завтра',[]],['later','🗓 Позже',[]],['none','🗂 Без даты',[]]];
+  const G = [['late',ug('late') + 'Просрочено',[]],['today',ug('today') + 'Сегодня',[]],['tom',ug('tom') + 'Завтра',[]],['later',ug('later') + 'Позже',[]],['none',ug('none') + 'Без даты',[]]];
   open.forEach(x => { const due = x[2], ht = x[3]; G[due == null ? 4 : (ht ? due < now : due < t0) ? 0 : due < t1 ? 1 : due < t2 ? 2 : 3][2].push(x) });
   const nToday = G[0][2].length + G[1][2].length;
-  $('tSub').textContent = open.length ? (nToday ? 'На сегодня ' + nToday + ' ' + plural(nToday,'дело','дела','дел') : 'На сегодня всё чисто ✨') + ' · всего ' + open.length : 'Список пуст — можно отдыхать 😌';
+  $('tSub').innerHTML = open.length ? (nToday ? 'На сегодня ' + nToday + ' ' + plural(nToday,'дело','дела','дел') : 'На сегодня всё чисто ' + ug('spark')) + ' · всего ' + open.length : 'Список пуст — можно отдыхать ' + ug('spark');
   let i = 0;
   const item = x => { const [id, text, due, ht, dn] = x, late = !dn && due && (ht ? due < now : due < t0);
     const meta = !due ? '' : late ? dueLabel(due, ht) : ht ? (due < t2 ? hhmm(due) : dueLabel(due, ht)) : (due < t2 ? '' : dueLabel(due, 0));
-    return '<div class="tk' + (dn ? ' done' : '') + '" data-id="' + id + '" style="--i:' + (i++) + '"><button class="cb" aria-label="Готово"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="tt"><b>' + esc(text) + '</b>' + (meta ? '<span' + (late ? ' class="late"' : '') + '>' + (ht && !late ? '⏰ ' : '') + meta + '</span>' : '') + '</button></div>' };
+    return '<div class="tk' + (dn ? ' done' : '') + '" data-id="' + id + '" style="--i:' + (i++) + '"><button class="cb" aria-label="Готово"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="tt"><b>' + esc(text) + '</b>' + (meta ? '<span' + (late ? ' class="late"' : '') + '>' + (ht && !late ? ug('bell') : '') + meta + '</span>' : '') + '</button></div>' };
   let h = '';
   G.forEach(([k, lbl, arr]) => { if(arr.length) h += '<p class="tdh' + (k === 'late' ? ' late' : '') + '"><span>' + lbl + '</span><span>' + arr.length + '</span></p><div class="glass list">' + arr.map(item).join('') + '</div>' });
-  if(done.length) h += '<p class="tdh"><span>✅ Сделано</span><span>' + done.length + '</span></p><div class="glass list dlist">' + done.map(item).join('') + '</div>';
-  $('tList').innerHTML = h || '<div class="glass empty" style="padding:34px 18px;margin-top:14px"><div style="font-size:44px">🙌</div><b style="display:block;font-size:17px;margin:8px 0 4px;color:var(--ink)">Дел нет</b>Добавь первое сверху или напиши боту</div>';
+  if(done.length) h += '<p class="tdh"><span>' + ug('check') + 'Сделано</span><span>' + done.length + '</span></p><div class="glass list dlist">' + done.map(item).join('') + '</div>';
+  $('tList').innerHTML = h || '<div class="glass empty" style="padding:34px 18px;margin-top:14px"><div class="bigic">' + gi('🙌') + '</div><b style="display:block;font-size:17px;margin:8px 0 4px;color:var(--ink)">Дел нет</b>Добавь первое сверху или напиши боту</div>';
   $('tList').querySelectorAll('.tk').forEach(el => { const id = +el.dataset.id, x = L.find(t => t[0] === id);
     el.querySelector('.cb').onclick = () => { const v = !el.classList.contains('done'); el.classList.toggle('done', v); haptic(v ? 'medium' : 'light'); setTimeout(() => send({t:'taskdone', id, v}, v ? 'Готово! 💪' : 'Вернул в дела'), 420) };
     el.querySelector('.tt').onclick = () => openTaskAct(x) });
@@ -899,8 +901,8 @@ function drawTask(){
   const custom = typeof tk.day === 'string' && tk.day.includes('-'), ct = tk.time && !times.some(t => t[0] === tk.time);
   $('tkDays').querySelector('.tkc').innerHTML = days.map(([k,l]) => '<button class="chip ' + ((tk.day == null ? 'none' : String(tk.day)) === k ? 'on' : '') + '" data-d="' + k + '">' + l + '</button>').join('');
   $('tkTimes').querySelector('.tkc').innerHTML = times.map(([k,l]) => '<button class="chip ' + ((tk.time || 'none') === k ? 'on' : '') + '" data-t="' + k + '">' + l + '</button>').join('');
-  $('tkDateL').classList.toggle('on', custom); $('tkDateL').firstChild.textContent = '📅 ' + (custom ? new Date(tk.day + 'T00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short'}) : 'Дата');
-  $('tkTimeL').classList.toggle('on', !!ct); $('tkTimeL').firstChild.textContent = '🕐 ' + (ct ? tk.time : 'Своё');
+  $('tkDateL').classList.toggle('on', custom); $('tkDateL').firstChild.innerHTML = ug('cal') + ' ' + (custom ? new Date(tk.day + 'T00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short'}) : 'Дата');
+  $('tkTimeL').classList.toggle('on', !!ct); $('tkTimeL').firstChild.innerHTML = ug('clock') + ' ' + (ct ? tk.time : 'Своё');
   if(!custom && $('tkDate').value) $('tkDate').value = ''; if(!ct && $('tkTime').value) $('tkTime').value = '';
   $('tkDays').querySelectorAll('[data-d]').forEach(b => b.onclick = () => { tk.day = b.dataset.d === 'none' ? null : +b.dataset.d; if(tk.day == null) tk.time = null; tick(); drawTask() });
   $('tkTimes').querySelectorAll('[data-t]').forEach(b => b.onclick = () => { tk.time = b.dataset.t === 'none' ? null : b.dataset.t; if(tk.time && tk.day == null) tk.day = 0; tick(); drawTask() });
@@ -914,9 +916,9 @@ $('tkSave').onclick = () => { const text = $('tkText').value.trim(); if(!text) r
     due = Math.floor(d.getTime()/1000); if(ht && tk.day === 0 && due < Date.now()/1000) due += 86400 }
   send(due ? {t:'task', text, due, ht} : {t:'task', text}, due ? 'Напомню ' + dueLabel(due, ht) + ' ⏰' : 'Записал 📝') };
 function openTaskAct(x){ const [id, text, due, ht, dn] = x, now = Date.now()/1000;
-  $('taHead').innerHTML = '<div class="ic" style="display:grid;place-items:center;font-size:44px">' + (dn ? '✅' : due && (ht ? due < now : due < dayStart(0)) ? '🔴' : '📝') + '</div><b>' + esc(text) + '</b><span>' + (dn ? 'сделано' : due ? '⏰ ' + dueLabel(due, ht) : 'без даты') + '</span>';
+  $('taHead').innerHTML = '<div class="ic">' + gi(dn ? '✅' : due && (ht ? due < now : due < dayStart(0)) ? '🔴' : '📝') + '</div><b>' + esc(text) + '</b><span>' + (dn ? 'сделано' : due ? ug('bell') + ' ' + dueLabel(due, ht) : 'без даты') + '</span>';
   const tom = () => { const d = new Date(dayStart(1)*1000); if(ht && due){ const o = new Date(due*1000); d.setHours(o.getHours(), o.getMinutes()) } else d.setHours(10, 0); return Math.floor(d.getTime()/1000) };
-  $('taActs').innerHTML = '<button class="primary" data-a="done">' + (dn ? '↩️ Вернуть' : '✅ Готово') + '</button>' + (dn ? '' : '<button class="chip" data-a="h1">+1 час</button><button class="chip" data-a="tom">Завтра</button>');
+  $('taActs').innerHTML = '<button class="primary" data-a="done">' + (dn ? ug('undo') + ' Вернуть' : ug('check') + ' Готово') + '</button>' + (dn ? '' : '<button class="chip" data-a="h1">+1 час</button><button class="chip" data-a="tom">Завтра</button>');
   $('taActs').querySelectorAll('button').forEach(b => b.onclick = () => { const a = b.dataset.a;
     if(a === 'done') send({t:'taskdone', id, v:!dn}, dn ? 'Вернул в дела' : 'Готово! 💪');
     if(a === 'h1') send({t:'taskmove', id, due:Math.floor(now + 3600), ht:1}, 'Напомню через час ⏰');
@@ -937,10 +939,10 @@ function confetti(){ const c = document.createElement('div'), cols = ['#9dfb8b',
 function renderGoals(){
   const G = D.goals || [];
   $('gList').innerHTML = G.length ? G.map((g, i) => { const [id, name, emo, target, cur, dl, saved, done] = g, pct = Math.min(100, saved / target * 100), left = Math.max(0, target - saved), ok = done || left <= 0;
-      const right = ok ? '🎉 Готово!' : dl ? '~' + fmt(left / Math.max(1, Math.ceil((dl - Date.now()/1000) / 86400)), 0) + ' ' + cur + ' в день' : 'осталось ' + fmt(left, 0);
-      return '<button class="glass gl' + (ok ? ' dn' : '') + '" data-id="' + id + '" style="--i:' + i + '"><div class="gh"><span class="ge">' + emo + '</span><span class="gn"><b>' + esc(name) + '</b><span>' + (ok ? 'цель достигнута' : dl ? 'до ' + dueLabel(dl, 0) : 'без срока') + '</span></span><span class="gp n">' + fmt(pct, 0) + '%</span></div>'
+      const right = ok ? ug('trophy') + ' Готово!' : dl ? '~' + fmt(left / Math.max(1, Math.ceil((dl - Date.now()/1000) / 86400)), 0) + ' ' + cur + ' в день' : 'осталось ' + fmt(left, 0);
+      return '<button class="glass gl' + (ok ? ' dn' : '') + '" data-id="' + id + '" style="--i:' + i + '"><div class="gh"><span class="ge">' + gi(emo) + '</span><span class="gn"><b>' + esc(name) + '</b><span>' + (ok ? 'цель достигнута' : dl ? 'до ' + dueLabel(dl, 0) : 'без срока') + '</span></span><span class="gp n">' + fmt(pct, 0) + '%</span></div>'
         + '<div class="gbar"><i data-w="' + pct + '"></i></div><div class="gs"><span><b class="n">' + fmt(saved) + '</b> из ' + fmt(target) + ' ' + cur + '</span><span>' + right + '</span></div></button>' }).join('')
-    : '<button class="glass gl gempty" id="gEmpty"><span class="ge">🐷</span><b>Поставь первую цель</b><span>Айфон, отпуск, подушка безопасности — посчитаю, сколько откладывать в день</span></button>';
+    : '<button class="glass gl gempty" id="gEmpty"><span class="ge">' + gi('🐷') + '</span><b>Поставь первую цель</b><span>Айфон, отпуск, подушка безопасности — посчитаю, сколько откладывать в день</span></button>';
   requestAnimationFrame(() => requestAnimationFrame(() => $('gList').querySelectorAll('.gbar i').forEach(i => i.style.width = i.dataset.w + '%')));
   $('gList').querySelectorAll('.gl[data-id]').forEach(b => b.onclick = () => openGoal(+b.dataset.id));
   if($('gEmpty')) $('gEmpty').onclick = () => openGoalNew();
@@ -951,8 +953,8 @@ function renderGoals(){
 let gn = {emo:null, cur:'BYN', dl:null};
 function drawGoalNew(){
   const name = $('gnName').value, auto = (GRX.find(([r]) => r.test(name)) || [0, '🎯'])[1], emo = gn.emo || auto;
-  $('gnEmo').textContent = emo;
-  $('gnEmos').innerHTML = GEMO.map(e => '<button class="chip ' + (e === emo ? 'on' : '') + '" data-e="' + e + '" style="font-size:18px;padding:0 12px">' + e + '</button>').join('');
+  $('gnEmo').innerHTML = gi(emo);
+  $('gnEmos').innerHTML = GEMO.map(e => '<button class="chip ' + (e === emo ? 'on' : '') + '" data-e="' + e + '" style="padding:0 8px">' + gi(e) + '</button>').join('');
   $('gnEmos').querySelectorAll('.chip').forEach(b => b.onclick = () => { gn.emo = b.dataset.e; tick(); drawGoalNew() });
   $('gnCurs').innerHTML = CURS().map(c => chip(c, emo_c(c), gn.cur)).join('');
   $('gnCurs').querySelectorAll('.chip').forEach(b => b.onclick = () => { gn.cur = b.dataset.f; tick(); drawGoalNew() });
@@ -961,7 +963,7 @@ function drawGoalNew(){
     const setD = e => { const v = e.target.value; if(v && v !== gn.dl){ gn.dl = v; tick(); drawGoalNew() } };
     $('gnDate').addEventListener('change', setD); $('gnDate').addEventListener('blur', setD) }
   $('gnDl').querySelector('.gnc').innerHTML = opts.map(([k,l]) => '<button class="chip ' + ((gn.dl == null ? 'none' : String(gn.dl)) === k ? 'on' : '') + '" data-m="' + k + '">' + l + '</button>').join('');
-  $('gnDateL').classList.toggle('on', custom); $('gnDateL').firstChild.textContent = '📅 ' + (custom ? new Date(gn.dl + 'T00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'}) : 'Дата');
+  $('gnDateL').classList.toggle('on', custom); $('gnDateL').firstChild.innerHTML = ug('cal') + ' ' + (custom ? new Date(gn.dl + 'T00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'}) : 'Дата');
   if(!custom && $('gnDate').value) $('gnDate').value = '';
   $('gnDl').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { gn.dl = b.dataset.m === 'none' ? null : +b.dataset.m; tick(); drawGoalNew() });
   $('gnSave').disabled = !(name.trim() && parseFloat($('gnAmt').value.replace(',','.').replace(/\s/g,'')) > 0);
@@ -975,10 +977,10 @@ $('gnSave').onclick = () => { const name = $('gnName').value.trim(), target = pa
 function openGoal(id){
   const g = (D.goals || []).find(x => x[0] === id); if(!g) return;
   const [, name, emo, target, cur, dl, saved, done] = g, left = Math.max(0, target - saved), pct = Math.min(100, saved / target * 100);
-  $('gHead').innerHTML = '<div class="ic" style="display:grid;place-items:center;font-size:46px">' + emo + '</div><b>' + esc(name) + '</b><div class="a n">' + fmt(saved) + ' <span style="display:inline;font-size:18px;color:var(--soft)">/ ' + fmt(target) + ' ' + cur + '</span></div>';
+  $('gHead').innerHTML = '<div class="ic">' + gi(emo) + '</div><b>' + esc(name) + '</b><div class="a n">' + fmt(saved) + ' <span style="display:inline;font-size:18px;color:var(--soft)">/ ' + fmt(target) + ' ' + cur + '</span></div>';
   $('gBarI').style.width = '0'; requestAnimationFrame(() => requestAnimationFrame(() => $('gBarI').style.width = pct + '%'));
   let per = ''; if(!done && left > 0 && dl){ const days = Math.max(1, Math.ceil((dl - Date.now()/1000) / 86400)); per = ' · <b>~' + fmt(left / days, 0) + ' ' + cur + '</b> в день, <b>~' + fmt(left / Math.max(1, days / 30.4), 0) + '</b> в месяц до ' + dueLabel(dl, 0) }
-  $('gSum').innerHTML = done || left <= 0 ? '🎉 Цель достигнута!' : 'Осталось <b>' + fmt(left) + ' ' + cur + '</b>' + per;
+  $('gSum').innerHTML = done || left <= 0 ? ug('trophy') + ' Цель достигнута!' : 'Осталось <b>' + fmt(left) + ' ' + cur + '</b>' + per;
   const nice = v => v >= 1000 ? Math.round(v / 100) * 100 : v >= 100 ? Math.round(v / 10) * 10 : Math.max(1, Math.round(v));
   const q = [...new Set([target * .02, target * .05, target * .1, target * .25].map(nice))].filter(v => v < left || !left); if(left > 0) q.push(Math.round(left * 100) / 100);
   $('gAmt').value = '';
@@ -1039,7 +1041,7 @@ function drawAdd(){
   $('save').disabled = !(n > 0); $('save').textContent = n > 0 ? (st.kind==='inc' ? 'Сохранить доход' : 'Сохранить трату') : 'Введи сумму';
 }
 const KEYS = ['1','2','3','4','5','6','7','8','9',',','0','⌫'];
-$('pad').innerHTML = KEYS.map(k => '<button data-k="' + k + '" aria-label="' + (k==='⌫'?'Стереть':k) + '">' + k + '</button>').join('');
+$('pad').innerHTML = KEYS.map(k => '<button data-k="' + k + '" aria-label="' + (k==='⌫'?'Стереть':k) + '">' + (k === '⌫' ? ug('back') : k) + '</button>').join('');
 $('pad').querySelectorAll('button').forEach(b => b.onclick = () => { const k = b.dataset.k; let a = st.amt;
   if(k === '⌫') a = a.slice(0,-1); else if(k === ','){ if(!a.includes('.')) a = (a || '0') + '.' }
   else { if(a === '0') a = ''; if(a.includes('.') && a.split('.')[1].length >= 4) return; if(a.replace('.','').length >= 9) return; a += k }
