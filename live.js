@@ -19,7 +19,7 @@
         'pointer-events:none;max-width:90vw;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3)';
       document.body.appendChild(el);
     }
-    el.textContent = text; el.style.opacity = '1';
+    el.textContent = String(text).replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{2300}-\u{23FF}\u{FE0F}]/gu, '').replace(/\s+([!.,])/g, '$1').replace(/\s{2,}/g, ' ').trim(); el.style.opacity = '1';
     clearTimeout(el._t); el._t = setTimeout(function(){ el.style.opacity = '0' }, 2200);
   }
 
